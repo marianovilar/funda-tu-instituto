@@ -320,10 +320,10 @@ function eventCfg(){
 }
 function stepProblem(step){
   if(step===1){
-    const miss=[]; if(!S.n.trim())miss.push('nombre'); if(!S.r.trim())miss.push('revista'); if(!S.dos.trim())miss.push('dossier'); if(!S.j.trim())miss.push('jornadas');
+    const miss=[]; if(!S.n.trim())miss.push('nombre'); if(!S.r.trim())miss.push('revista'); if(!S.j.trim())miss.push('jornadas');
     return miss.length?'Falta completar: '+miss.join(', '):'';
   }
-  if(step===3){ const k=S.e.filter(x=>!x.trim()).length; return k>0?`Falta escribir ${k} ${plural(k,'eje','ejes')}`:''; }
+  if(step===3){ const k=S.e.filter(x=>!x.trim()).length; if(k>0) return `Falta escribir ${k} ${plural(k,'eje','ejes')}`; return S.dos.trim()?'':'Falta el tema del dossier'; }
   if(step===4){ const left=TOTAL-sum(S.b); return left>0?`Quedan ${left} ${plural(left,'ficha','fichas')} por repartir`:''; }
   if(step===5){
     const ev=EVENTS[S.ev]; if(!ev) return 'Primero saquen una carta';
@@ -419,7 +419,7 @@ function renderIntro(){
     <section class="sheet">
       <div class="field"><label for="grupo">Integrantes del grupo</label><input type="text" id="grupo" value="${esc(S.grupo)}" placeholder="Ana, Lucas, Ramiro, Sol" autocomplete="off"><span class="hint">Opcional. Aparece al pie del acta de fundación.</span></div>
       <div><p class="mono-label" style="margin-bottom:6px">Qué van a decidir</p>
-      <ol class="plan">${STEPS.map((s,i)=>`<li>${['Nombre, sigla, lema, revista con su primer dossier y jornadas','Diseño del logo','Tres ejes de investigación','Cómo se reparten 20 fichas de presupuesto','Una carta con un imprevisto','Acta de fundación en PDF, para subir a la carpeta del curso'][i]}</li>`).join('')}</ol></div>
+      <ol class="plan">${STEPS.map((s,i)=>`<li>${['Nombre, sigla, lema, revista y jornadas','Diseño del logo','Tres ejes de investigación y el dossier del primer número de la revista','Cómo se reparten 20 fichas de presupuesto','Una carta con un imprevisto','Acta de fundación en PDF, para subir a la carpeta del curso'][i]}</li>`).join('')}</ol></div>
       <div class="btns"><button class="btn primary" id="start">${started?'Seguir donde quedamos':'Empezar'}</button>${started?'<button class="btn ghost" id="fresh">Empezar de cero</button>':''}</div>
       <div id="freshConfirm"></div>
     </section>
@@ -442,14 +442,13 @@ function stepIdentidad(){
     </div>
     <div class="field"><label for="lema">Lema <span class="muted" style="font-weight:400">(opcional)</span></label><input type="text" id="lema" maxlength="90" value="${esc(S.lema)}" placeholder="Pensar desde el sur" autocomplete="off"></div>
     <div class="field"><label for="r">Revista académica del instituto</label><input type="text" id="r" maxlength="110" value="${esc(S.r)}" placeholder="Cuadernos del Sur. Revista de Humanidades" autocomplete="off"></div>
-    <div class="field"><label for="dos">Tema del dossier del primer número</label><input type="text" id="dos" maxlength="140" value="${esc(S.dos)}" placeholder="Archivos, memorias y silencios" autocomplete="off"><span class="hint">El dossier reúne varios artículos sobre un mismo tema. Es la carta de presentación de la revista.</span></div>
     <div class="field"><label for="j">Jornadas anuales</label><input type="text" id="j" maxlength="130" value="${esc(S.j)}" placeholder="Jornadas de Jóvenes Investigadores en Humanidades" autocomplete="off"></div>
   </section>`;
 }
 function bindIdentidad(){
   $('#n').oninput=e=>{S.n=e.target.value; if(S.sAuto){S.s=siglaFrom(S.n); $('#s').value=S.s;} save(); refreshNav();};
   $('#s').oninput=e=>{S.s=e.target.value.toUpperCase(); e.target.value=S.s; S.sAuto=!S.s; save();};
-  ['lema','r','dos','j'].forEach(k=>{$('#'+k).oninput=e=>{S[k]=e.target.value; save(); refreshNav();};});
+  ['lema','r','j'].forEach(k=>{$('#'+k).oninput=e=>{S[k]=e.target.value; save(); refreshNav();};});
 }
 
 function stepLogo(){
@@ -488,10 +487,13 @@ function stepEjes(){
   return `<section class="sheet">
     <div><h2>Ejes de investigación</h2><p class="muted">Escriban las tres líneas que el instituto va a privilegiar. Lo que no elijan no desaparece, pero no va a tener prioridad en concursos, becas ni fondos.</p></div>
     ${[0,1,2].map(i=>`<div class="field"><label for="eje${i}">Eje ${i+1}</label><input type="text" id="eje${i}" data-eje="${i}" maxlength="90" value="${esc(S.e[i])}" placeholder="${esc(ph[i])}" autocomplete="off"></div>`).join('')}
+    <div><h2 style="font-size:1.25rem">El primer número de la revista</h2><p class="muted">Con los ejes definidos, elijan el tema del dossier con el que se lanza <i>${esc(S.r||'la revista')}</i>.</p></div>
+    <div class="field"><label for="dos">Tema del dossier del primer número</label><input type="text" id="dos" maxlength="140" value="${esc(S.dos)}" placeholder="Archivos, memorias y silencios" autocomplete="off"><span class="hint">El dossier reúne varios artículos sobre un mismo tema. Piénsenlo a partir de los ejes que acaban de escribir: es la carta de presentación de la revista.</span></div>
   </section>`;
 }
 function bindEjes(){
   document.querySelectorAll('[data-eje]').forEach(el=>el.oninput=e=>{ S.e[+el.dataset.eje]=e.target.value; save(); refreshNav(); });
+  $('#dos').oninput=e=>{ S.dos=e.target.value; save(); refreshNav(); };
 }
 
 function stepPresupuesto(){
