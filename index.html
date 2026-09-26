@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Minijuego para clase: cada grupo funda un instituto de investigación en Humanidades y Ciencias Sociales.">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)} body{margin:0} img{max-width:100%} [hidden]{display:none!important}</style>
+<title>Fundá tu instituto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ECEFF3; --grid:rgba(40,70,140,.07); --paper:#FFFFFF; --paper-2:#F5F6F9; --ink:#18223A; --ink-2:#56607A; --line:#D3D9E2;
+  --accent:#5B3FA8; --accent-ink:#FFFFFF; --accent-soft:#ECE6FA; --warn:#B4531F; --ok:#2E7D52; --stamp:#5B3FA8; --tile:#F6F7FB;
+  --c1:#3F5BB0; --c2:#7B4BB5; --c3:#D0782A; --c4:#2B8C8C; --c5:#5E6B7F; --c6:#8C6A3C; --c7:#C24D72; --c8:#4E8F3A; --c9:#A0A8B8;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10141C; --grid:rgba(160,180,255,.05); --paper:#191F2C; --paper-2:#212838; --ink:#E6E9F2; --ink-2:#9EA8BD; --line:#313A4E;
+    --accent:#A48BF0; --accent-ink:#150F24; --accent-soft:#2A2343; --warn:#F0A06A; --ok:#72C996; --stamp:#B69DF5; --tile:#EEF0F6;
+    --c1:#7C95E6; --c2:#AC86E6; --c3:#EB9A55; --c4:#4FC0BE; --c5:#9AA6BA; --c6:#C49A64; --c7:#E77C9E; --c8:#86C46F; --c9:#6F788C;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10141C; --grid:rgba(160,180,255,.05); --paper:#191F2C; --paper-2:#212838; --ink:#E6E9F2; --ink-2:#9EA8BD; --line:#313A4E;
+  --accent:#A48BF0; --accent-ink:#150F24; --accent-soft:#2A2343; --warn:#F0A06A; --ok:#72C996; --stamp:#B69DF5; --tile:#EEF0F6;
+  --c1:#7C95E6; --c2:#AC86E6; --c3:#EB9A55; --c4:#4FC0BE; --c5:#9AA6BA; --c6:#C49A64; --c7:#E77C9E; --c8:#86C46F; --c9:#6F788C;
+}
+.pdf-light{
+  color-scheme:light;
+  --bg:#ECEFF3; --paper:#FFFFFF; --paper-2:#F5F6F9; --ink:#18223A; --ink-2:#56607A; --line:#D3D9E2;
+  --accent:#5B3FA8; --accent-ink:#FFFFFF; --accent-soft:#ECE6FA; --stamp:#5B3FA8; --tile:#F6F7FB;
+  --c1:#3F5BB0; --c2:#7B4BB5; --c3:#D0782A; --c4:#2B8C8C; --c5:#5E6B7F; --c6:#8C6A3C; --c7:#C24D72; --c8:#4E8F3A; --c9:#A0A8B8;
+  position:absolute; left:-10000px; top:0; width:820px; color:var(--ink); background:#FFFFFF; font-size:16px;
+}
+.pdf-light .acta{border:0; border-radius:0}
+.pdf-light *{animation:none!important}
+*{box-sizing:border-box}
+body{
+  background-color:var(--bg);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+  color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+}
+h1,h2,h3{font-family:var(--f-display); line-height:1.1; text-wrap:balance; margin:0}
+p{margin:0}
+.wrap{max-width:680px; margin:0 auto; padding-inline:16px; padding-block:16px 130px; display:grid; gap:18px}
+.eyebrow,.mono-label{font-family:var(--f-mono); font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
+.muted{color:var(--ink-2)}
+.small{font-size:.9rem}
+a{color:var(--accent)}
+.sheet{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:20px; display:grid; gap:18px}
+.btn{font:inherit; font-weight:700; border:1.5px solid var(--ink); background:var(--paper); color:var(--ink); border-radius:10px; padding:.65em 1.1em; cursor:pointer; display:inline-flex; align-items:center; gap:.5em; text-decoration:none; line-height:1.2}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.btn.ghost{border-color:var(--line)}
+.btn.small{font-size:.88rem; padding:.45em .8em}
+.btn:disabled{opacity:.4; cursor:not-allowed}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+.field{display:grid; gap:6px}
+.field label{font-weight:700}
+.field .hint{font-size:.85rem; color:var(--ink-2)}
+input[type=text],textarea{font:inherit; width:100%; padding:.7em .8em; border:1.5px solid var(--line); border-radius:10px; background:var(--paper); color:var(--ink)}
+input[type=text]:focus,textarea:focus{border-color:var(--accent)}
+.row2{display:grid; grid-template-columns:1fr 130px; gap:12px}
+@media (max-width:460px){.row2{grid-template-columns:1fr}}
+
+/* top */
+.top{display:grid; gap:10px}
+.top-line{display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap}
+.brand{font-family:var(--f-display); font-weight:800; font-size:1.05rem}
+.progress{display:grid; grid-template-columns:repeat(6,1fr); gap:4px}
+.progress i{height:5px; border-radius:3px; background:var(--line)}
+.progress i.done{background:var(--accent)}
+
+/* intro */
+.intro h1{font-size:clamp(2.1rem,7vw,3.2rem); font-weight:800; letter-spacing:-.02em}
+.lede{font-size:1.1rem; max-width:60ch}
+.intro-art{display:flex; gap:14px; flex-wrap:wrap}
+.intro-art .logo-tile{width:92px; height:92px}
+.plan{margin:0; padding-left:1.4em; display:grid; gap:4px}
+.plan li::marker{font-family:var(--f-mono); color:var(--ink-2)}
+
+/* logo */
+.logo-tile{background:var(--tile); border-radius:16px; display:grid; place-items:center; flex:none}
+.logo-tile svg{display:block; width:78%; height:auto}
+.logo-stage{display:flex; gap:18px; align-items:center; flex-wrap:wrap}
+.logo-stage .logo-tile{width:150px; height:150px}
+.opt-group{display:grid; gap:8px}
+.opt-group h3{font-family:var(--f-body); font-size:1rem}
+.opts{display:grid; grid-template-columns:repeat(auto-fill,minmax(54px,1fr)); gap:8px}
+.opt{aspect-ratio:1; border:1.5px solid var(--line); border-radius:12px; background:var(--paper-2); display:grid; place-items:center; cursor:pointer; color:var(--ink); padding:0}
+.opt svg{width:60%; height:60%}
+.opt[aria-pressed="true"]{border-color:var(--accent); box-shadow:inset 0 0 0 2px var(--accent); background:var(--accent-soft)}
+.swatches{display:flex; flex-wrap:wrap; gap:10px}
+.sw{width:40px; height:40px; border-radius:50%; border:3px solid var(--paper); box-shadow:0 0 0 1.5px var(--line); cursor:pointer; padding:0}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--accent)}
+.seg{display:flex; flex-wrap:wrap; gap:8px}
+
+/* chips */
+.chips{display:flex; flex-wrap:wrap; gap:8px}
+.chip{font:inherit; font-size:.95rem; border:1.5px solid var(--line); border-radius:999px; padding:.42em .9em; background:var(--paper); color:var(--ink); cursor:pointer; line-height:1.3; text-align:left}
+.chip[aria-pressed="true"]{background:var(--accent); color:var(--accent-ink); border-color:var(--accent)}
+.chip:disabled{opacity:.4; cursor:not-allowed}
+.chip.static{cursor:default}
+.count-pill{font-family:var(--f-mono); font-size:.85rem; padding:.2em .6em; border-radius:999px; background:var(--accent-soft); color:var(--ink)}
+.add-row{display:flex; gap:8px}
+.add-row input{flex:1}
+
+/* budget */
+.bud-head{position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:var(--paper); padding-block:10px; display:grid; gap:8px; border-bottom:1px solid var(--line)}
+.tot{display:grid; gap:2px}
+.tot i{height:16px; border-radius:3px; background:var(--line)}
+.status{display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; font-size:.95rem}
+.status .st-ok{color:var(--ok); font-weight:700}
+.status .st-warn{color:var(--warn); font-weight:700}
+.brow{display:grid; gap:6px; padding-block:14px; border-bottom:1px solid var(--line)}
+.brow:last-child{border-bottom:0}
+.brow-top{display:flex; align-items:center; gap:10px}
+.dot{width:12px; height:12px; border-radius:3px; background:var(--c); flex:none}
+.val{margin-left:auto; font-family:var(--f-mono); font-weight:500; font-size:1.1rem; font-variant-numeric:tabular-nums; white-space:nowrap}
+.delta{font-family:var(--f-mono); font-size:.8rem; padding:.05em .45em; border-radius:6px; margin-left:6px; background:var(--paper-2); border:1px solid var(--line)}
+.brow-desc{font-size:.88rem; color:var(--ink-2)}
+.ctl{display:flex; align-items:center; gap:8px}
+.stepb{width:40px; height:40px; flex:none; border-radius:10px; border:1.5px solid var(--line); background:var(--paper-2); color:var(--ink); font:inherit; font-size:1.3rem; font-weight:700; cursor:pointer; line-height:1}
+.stepb:disabled{opacity:.35; cursor:not-allowed}
+.pips{flex:1; display:grid; grid-template-columns:repeat(10,1fr); gap:3px}
+.pip{height:24px; border-radius:4px; border:1.5px solid var(--line); background:transparent; cursor:pointer; padding:0}
+.pip.on{background:var(--c); border-color:var(--c)}
+.pip.cut{border-style:dashed; border-color:var(--c); background:repeating-linear-gradient(45deg,transparent 0 4px,color-mix(in srgb,var(--c) 45%,transparent) 4px 6px)}
+.pip.new{box-shadow:inset 0 0 0 2px var(--paper)}
+.pip:disabled{cursor:default}
+.quip{font-size:.9rem; color:var(--ink-2); font-style:italic}
+.locked .pips,.locked .brow-desc{opacity:.5}
+
+/* event */
+.evcard{border:2px solid var(--ink); border-radius:14px; padding:18px; background:var(--paper-2); display:grid; gap:10px; animation:flip .5s ease-out both}
+.evcard h2{font-size:1.6rem}
+.evback{border:2px dashed var(--line); border-radius:14px; padding:28px 18px; display:grid; gap:14px; justify-items:center; text-align:center;
+  background:repeating-linear-gradient(-45deg,var(--paper-2) 0 10px,var(--paper) 10px 20px)}
+.evback .q{font-family:var(--f-display); font-weight:800; font-size:3.4rem; line-height:1; color:var(--accent)}
+.choice{display:flex; gap:10px; flex-wrap:wrap}
+.choice .btn[aria-pressed="true"]{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+@keyframes flip{from{transform:perspective(800px) rotateY(80deg); opacity:.2} to{transform:none; opacity:1}}
+
+/* nav */
+.nav{position:fixed; left:0; right:0; bottom:0; z-index:20; background:color-mix(in srgb,var(--bg) 90%,transparent); backdrop-filter:blur(8px); border-top:1px solid var(--line); padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+.nav-in{max-width:680px; margin:0 auto; display:flex; align-items:center; gap:12px}
+.nav-hint{flex:1; font-size:.88rem; color:var(--ink-2); text-align:center}
+
+/* acta */
+.acta{background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:clamp(18px,4vw,34px); position:relative; overflow:hidden; display:grid; gap:18px}
+.acta-head{display:flex; gap:18px; align-items:center; flex-wrap:wrap; padding-right:0}
+.acta-head .logo-tile{width:120px; height:120px}
+.acta-title{display:grid; gap:4px; min-width:0; flex:1 1 260px}
+.acta-title h2{font-size:clamp(1.5rem,4.5vw,2.2rem); font-weight:800; letter-spacing:-.01em; overflow-wrap:anywhere}
+.acta-sigla{font-family:var(--f-mono); font-weight:500; color:var(--accent); letter-spacing:.1em}
+.acta-lema{font-style:italic; color:var(--ink-2)}
+.visto{font-family:var(--f-mono); font-size:.82rem; line-height:1.6; color:var(--ink-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding-block:12px}
+.arts{margin:0; padding:0; list-style:none; display:grid; gap:10px}
+.arts b{font-family:var(--f-mono); font-weight:500; font-size:.85rem; letter-spacing:.04em; text-transform:uppercase; margin-right:.4em}
+.anexo{display:grid; gap:8px}
+.anexo h3,.imp h3{font-family:var(--f-mono); font-weight:500; font-size:.82rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
+.bar-row{display:grid; grid-template-columns:minmax(120px,190px) 1fr auto; gap:10px; align-items:center; font-size:.92rem}
+.bar-track{height:14px; background:var(--paper-2); border-radius:4px; overflow:hidden; border:1px solid var(--line)}
+.bar-fill{height:100%; background:var(--c)}
+.bar-num{font-family:var(--f-mono); font-variant-numeric:tabular-nums; white-space:nowrap; font-size:.88rem}
+.bar-row.zero{color:var(--ink-2)}
+@media (max-width:460px){.bar-row{grid-template-columns:1fr auto} .bar-row .bar-track{grid-column:1/-1; order:3}}
+.imp{display:grid; gap:6px; padding:14px; border-radius:10px; background:var(--paper-2)}
+.firmas{font-size:.92rem; color:var(--ink-2)}
+.stamp{justify-self:end; font-family:var(--f-display); font-weight:800; color:var(--stamp); border:4px double var(--stamp); border-radius:10px; padding:6px 16px 4px; text-align:center; transform:rotate(-8deg); letter-spacing:.14em; font-size:1.5rem; line-height:1.1; opacity:.88; animation:stamp .45s cubic-bezier(.2,.9,.3,1.3) .25s both}
+.stamp small{display:block; font-family:var(--f-mono); font-weight:500; font-size:.62rem; letter-spacing:.1em}
+@keyframes stamp{from{transform:rotate(-8deg) scale(2.4); opacity:0} to{transform:rotate(-8deg) scale(1); opacity:.88}}
+.share{display:grid; gap:10px}
+.code{font-family:var(--f-mono); font-size:.8rem; word-break:break-all; min-height:90px; resize:vertical}
+.btns{display:flex; gap:10px; flex-wrap:wrap}
+.note{font-size:.9rem; color:var(--ink-2)}
+.confirm{display:flex; gap:10px; align-items:center; flex-wrap:wrap; padding:10px 12px; border-radius:10px; background:var(--paper-2); border:1px solid var(--line)}
+
+/* docente */
+.t-wrap{max-width:1400px; margin:0 auto; padding-inline:clamp(16px,3vw,32px); padding-block:24px 60px; display:grid; gap:22px; font-size:17px}
+.t-head{display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap}
+.t-head h1{font-size:clamp(2rem,4vw,3rem); font-weight:800; letter-spacing:-.02em}
+.tabs{display:flex; gap:8px; flex-wrap:wrap}
+.tabs .btn[aria-pressed="true"]{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+.add-panel{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:18px; display:grid; gap:12px}
+.add-panel textarea{min-height:110px; font-family:var(--f-mono); font-size:.85rem}
+.gallery{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr)); gap:18px}
+.icard{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:18px; display:grid; gap:12px; align-content:start; position:relative}
+.icard-open{all:unset; cursor:pointer; display:grid; gap:12px}
+.icard-open:focus-visible{outline:3px solid var(--accent); outline-offset:6px; border-radius:8px}
+.icard-top{display:flex; gap:14px; align-items:center}
+.icard-top .logo-tile{width:84px; height:84px}
+.icard h2{font-size:1.3rem; font-weight:800; overflow-wrap:anywhere}
+.icard .meta{display:grid; gap:2px; font-size:.95rem}
+.icard .meta span{color:var(--ink-2)}
+.stack{display:flex; height:16px; border-radius:4px; overflow:hidden; background:var(--line)}
+.stack i{background:var(--c); height:100%}
+.tag-ej{position:absolute; top:12px; right:12px; font-family:var(--f-mono); font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; padding:.15em .5em; border-radius:6px; background:var(--accent-soft)}
+.icard .x{justify-self:start}
+.legend{display:flex; flex-wrap:wrap; gap:6px 16px; font-size:.88rem; color:var(--ink-2)}
+.legend span{display:inline-flex; align-items:center; gap:6px}
+.heat-wrap{overflow-x:auto; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:12px}
+.heat{border-collapse:separate; border-spacing:4px; width:100%; min-width:760px}
+.heat th{font-size:.82rem; font-weight:700; color:var(--ink-2); text-align:center; vertical-align:bottom; padding:4px}
+.heat th.rowh{text-align:left; color:var(--ink); font-size:.95rem}
+.heat th.rowh .in{display:flex; align-items:center; gap:10px}
+.heat th.rowh .logo-tile{width:40px; height:40px; border-radius:10px}
+.heat td{font-family:var(--f-mono); font-size:1.15rem; text-align:center; border-radius:6px; padding:10px 6px; font-variant-numeric:tabular-nums}
+.heat tr.avg th,.heat tr.avg td{border-top:2px solid var(--line); font-weight:500}
+.empty{background:var(--paper); border:1.5px dashed var(--line); border-radius:14px; padding:28px; display:grid; gap:10px; justify-items:start}
+.spot{position:fixed; inset:0; z-index:60; background:var(--bg); overflow:auto; padding:env(safe-area-inset-top,0px) 16px env(safe-area-inset-bottom,0px)}
+.spot-in{max-width:920px; margin:0 auto; padding-block:16px 40px; display:grid; gap:14px}
+.spot-bar{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+.spot .acta{font-size:1.08rem}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+</style>
+
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+(function(){
+const TOTAL = 20, MAXC = 10;
+const CATS = [
+  {id:'bec', name:'Formación de becarios', short:'Becarios', desc:'Becas doctorales y posdoctorales, dirección de tesis, seminarios internos.',
+   q:['Sin becarios. ¿Quién va a investigar dentro de diez años?','Una o dos becas: se turnan el escritorio.','Un semillero de tesistas en marcha.','Tienen más becarios que sillas. Consigan sillas.']},
+  {id:'pub', name:'Divulgación académica', short:'Divulg. académica', desc:'La revista del instituto, libros, traducciones, publicaciones en acceso abierto.',
+   q:['La revista sale... cuando sale.','Un número por año, si todo va bien.','Revista con referato, DOI y números al día.','Apuntan a los grandes índices. El comité editorial no duerme.']},
+  {id:'dpg', name:'Divulgación al público general', short:'Público general', desc:'Podcast, redes, charlas en escuelas, notas en medios, ferias.',
+   q:['Lo que se investiga queda entre colegas.','Algún posteo en redes de vez en cuando.','Podcast propio y charlas en escuelas.','Salen en la radio más que el intendente.']},
+  {id:'red', name:'Redes internacionales', short:'Redes internac.', desc:'Convenios, estancias, proyectos conjuntos, congresos en el exterior.',
+   q:['Instituto cien por ciento local.','Un convenio firmado que casi nadie usa.','Estancias de investigación y coautorías con el exterior.','Viven en aeropuertos. El jet lag es parte del plan.']},
+  {id:'tec', name:'Insumos tecnológicos', short:'Tecnología', desc:'Computadoras, software, servidores, conectividad, digitalización.',
+   q:['Una PC de 2011 compartida por todo el instituto.','Wifi que anda, a veces.','Equipos nuevos y licencias al día.','Laboratorio de humanidades digitales completo.']},
+  {id:'bib', name:'Biblioteca y archivos', short:'Biblioteca', desc:'Libros, bases de datos, conservación y digitalización de archivos.',
+   q:['Los libros se piden por mail a colegas.','Algunas suscripciones a bases de datos.','Biblioteca especializada y archivo en crecimiento.','Custodian un archivo que viene a consultar gente de todo el mundo.']},
+  {id:'eve', name:'Jornadas y eventos', short:'Jornadas', desc:'Las jornadas anuales, seminarios, conferencias con invitados.',
+   q:['Las jornadas anuales son una reunión por videollamada.','Jornadas modestas, café de termo.','Jornadas con invitados y actas publicadas.','Congreso internacional con coffee break de medialunas.']},
+  {id:'ter', name:'Vinculación territorial', short:'Territorio', desc:'Extensión, trabajo con organizaciones sociales, escuelas y comunidades.',
+   q:['El barrio no sabe que el instituto existe.','Algún proyecto de extensión.','Trabajo sostenido con organizaciones sociales.','La comunidad participa en el diseño de las investigaciones.']},
+  {id:'ges', name:'Gestión y administración', short:'Gestión', desc:'Personal de apoyo, rendiciones de subsidios, trámites, mantenimiento.',
+   q:['Las rendiciones las hacen los investigadores, de noche.','Una persona de administración heroica.','Un equipo que conoce todos los formularios.','Nunca más se pierde un subsidio por un papel mal presentado.']}
+];
+const EJES = ['Memoria, verdad y justicia','Géneros y sexualidades','Historia argentina y latinoamericana','Educación y desigualdades','Trabajo y mundos laborales','Literaturas y crítica cultural','Filosofía y teoría política','Lenguas, lenguajes y traducción','Ambiente y territorio','Migraciones y fronteras','Pueblos indígenas e interculturalidad','Humanidades digitales','Arte, estética y performance','Medios y comunicación','Religiones y creencias','Ciencia, tecnología y sociedad','Salud y sociedad','Juventudes','Estado y políticas públicas','Ciudades y vida urbana'];
+const EVENTS = {
+  recorte:{kind:'cut', n:5, title:'Recorte presupuestario', text:'El presupuesto nacional de ciencia y técnica se ajusta. El instituto pierde 5 fichas. Tienen que decidir qué se achica.'},
+  inflacion:{kind:'cut', n:3, title:'Los montos quedaron viejos', text:'La inflación se comió parte del presupuesto aprobado a principio de año. Pierden 3 fichas de poder adquisitivo.'},
+  fundacion:{kind:'bonus', n:4, cats:['red','tec'], title:'Una fundación extranjera golpea la puerta', text:'Ofrece 4 fichas extra, pero solo para Redes internacionales o Insumos tecnológicos. A cambio, los resultados se publican primero en inglés, en las revistas que ella elige.'},
+  empresa:{kind:'bonus', n:3, cats:['dpg','eve'], title:'Una empresa quiere auspiciar', text:'Ofrece 3 fichas para Divulgación al público general o Jornadas y eventos. A cambio, su logo va en la revista, en las jornadas y en cada posteo del instituto.'},
+  techo:{kind:'force', n:2, cat:'bib', title:'Se llueve la biblioteca', text:'Una tormenta daña parte del archivo. Tienen que sumar al menos 2 fichas a Biblioteca y archivos sin aumentar el total, así que algo más se achica.'},
+  evaluacion:{kind:'force', n:2, cat:'pub', title:'Llega la evaluación institucional', text:'La comisión evaluadora pide más producción publicada. Tienen que sumar al menos 2 fichas a Divulgación académica sin aumentar el total.'}
+};
+const LCOLORS = ['#3949AB','#C0392B','#1E8C6E','#D98E04','#7B3FA0','#1F2937','#0E7490','#B4506A'];
+const SHAPES = {circulo:'Círculo', escudo:'Escudo', hexagono:'Hexágono', sello:'Sello', cuadrado:'Cuadrado', arco:'Arco', rombo:'Rombo'};
+const GLYPHS = {
+  libro:{l:'Libro', d:'M12 6.5C9.5 4.8 6.5 4.5 3 5v13c3.5-.5 6.5-.2 9 1.5 2.5-1.7 5.5-2 9-1.5V5c-3.5-.5-6.5-.2-9 1.5zM12 6.5v13'},
+  pluma:{l:'Pluma', d:'M20 3C12 4 7 9 6 17l-2 4M6 17c6-.5 10-4 12-10M9 13h6'},
+  lupa:{l:'Lupa', d:'M15.5 15.5L21 21M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14z'},
+  globo:{l:'Globo', d:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c2.5 2.5 3.8 5.5 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.5-3.8-9S9.5 5.5 12 3z'},
+  ojo:{l:'Ojo', d:'M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'},
+  sol:{l:'Sol', d:'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9L7 7M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1'},
+  arbol:{l:'Árbol', d:'M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM12 22V11M12 14l-3-2.5M12 16.5l3-2.5'},
+  llave:{l:'Llave', d:'M8 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 12h9M18 12v3M21 12v3'},
+  columna:{l:'Columnas', d:'M3 9l9-5 9 5zM5 20h14M3 22h18M6 11v7M10 11v7M14 11v7M18 11v7'},
+  megafono:{l:'Megáfono', d:'M3 10v4h3l9 5V5L6 10H3zM18.5 9a4 4 0 0 1 0 6M6 14l1 5h3l-1-4'},
+  bombilla:{l:'Lamparita', d:'M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.7.6 1 1.3 1 2.1v.5h5V16c0-.8.3-1.5 1-2.1A6 6 0 0 0 12 3z'},
+  mate:{l:'Mate', d:'M6 10c0 6.5 2.7 11 6 11s6-4.5 6-11zM5 10h14M13.5 10L17 3h2.5'},
+  estrella:{l:'Estrella', d:'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z'},
+  brujula:{l:'Brújula', d:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM15.5 8.5l-2 5-5 2 2-5z'},
+  voces:{l:'Voces', d:'M3 4h12v9H9l-4 3v-3H3zM15 8h6v9h-2v3l-3-3h-5v-4'}
+};
+const STEPS = ['Identidad','Logo','Ejes','Presupuesto','Imprevisto','Acta'];
+const STOP = new Set(['de','del','la','las','los','el','y','e','en','para','sobre','a','al','por','con','o','u']);
+const SELLO = (()=>{const p=[];for(let i=0;i<32;i++){const a=i/32*Math.PI*2-Math.PI/2, r=i%2?41.5:46.5;p.push((50+r*Math.cos(a)).toFixed(1)+','+(50+r*Math.sin(a)).toFixed(1));}return p.join(' ');})();
+
+const SAMPLES = [
+  {v:1,ej:true,g:'Grupo de ejemplo',n:'Instituto de Estudios sobre Memoria y Territorio',s:'IEMT',m:'Recordar desde el lugar',r:'Huellas',j:'Jornadas Patagónicas de Memoria y Territorio',
+   l:{sh:'escudo',gl:'arbol',c:2,st:'relleno',si:true},e:['Memoria, verdad y justicia','Ambiente y territorio','Pueblos indígenas e interculturalidad'],
+   b:[5,2,3,1,1,3,1,3,1],ev:'recorte',ea:null,f:[4,1,2,0,1,3,1,3,0],er:'Sostuvimos becas y territorio. Cortamos viajes y gestión: las rendiciones las vamos a hacer nosotros.',rn:317},
+  {v:1,ej:true,g:'Grupo de ejemplo',n:'Centro de Humanidades Digitales del Litoral',s:'CHDL',m:'Leer con máquinas, pensar con personas',r:'Interfaz. Revista de Humanidades Digitales',j:'Encuentro Anual de Humanidades Digitales',
+   l:{sh:'hexagono',gl:'bombilla',c:6,st:'anillo',si:true},e:['Humanidades digitales','Lenguas, lenguajes y traducción','Medios y comunicación'],
+   b:[3,3,2,3,5,1,1,0,2],ev:'fundacion',ea:true,f:[3,3,2,5,7,1,1,0,2],er:'Aceptamos. La plata servía, pero discutimos mucho lo de publicar primero en inglés.',rn:852}
+];
+
+const $ = (s,r=document)=>r.querySelector(s);
+const esc = s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const store = {
+  get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},
+  del(k){try{localStorage.removeItem(k)}catch(e){}}
+};
+const sum = a=>a.reduce((x,y)=>x+y,0);
+const tier = v=>v===0?0:v<=2?1:v<=5?2:3;
+const plural = (n,a,b)=>n===1?a:b;
+const app = $('#app');
+
+/* ---------- logo ---------- */
+function shapeEl(sh, attrs){
+  switch(sh){
+    case 'circulo': return `<circle cx="50" cy="50" r="46" ${attrs}/>`;
+    case 'hexagono': return `<polygon points="50,4 90,27 90,73 50,96 10,73 10,27" ${attrs}/>`;
+    case 'cuadrado': return `<rect x="6" y="6" width="88" height="88" rx="20" ${attrs}/>`;
+    case 'rombo': return `<polygon points="50,2 98,50 50,98 2,50" ${attrs}/>`;
+    case 'arco': return `<path d="M11 96V47a39 39 0 0 1 78 0v49z" ${attrs}/>`;
+    case 'sello': return `<polygon points="${SELLO}" ${attrs}/>`;
+    default: return `<path d="M50 4L90 15v32c0 24-17 40-40 49C27 87 10 71 10 47V15z" ${attrs}/>`;
+  }
+}
+function logoSVG(l, sigla){
+  l = l||{};
+  const col = LCOLORS[l.c]||LCOLORS[0];
+  const filled = l.st!=='contorno';
+  const fg = filled?'#FFFFFF':col;
+  let body = filled ? shapeEl(l.sh,`fill="${col}"`) : shapeEl(l.sh,`fill="none" stroke="${col}" stroke-width="4.5" stroke-linejoin="round"`);
+  if(l.st==='anillo') body += `<g transform="translate(50 50) scale(.84) translate(-50 -50)">${shapeEl(l.sh,'fill="none" stroke="#FFFFFF" stroke-opacity=".85" stroke-width="2.2" stroke-linejoin="round"')}</g>`;
+  const g = GLYPHS[l.gl]||GLYPHS.libro;
+  const t = (sigla||'').slice(0,8);
+  const withS = !!(l.si && t);
+  const s = withS?1.5:2.05, cy = withS?(l.sh==='rombo'?42:41):(l.sh==='escudo'?47:50);
+  let out = body + `<g transform="translate(${(50-12*s).toFixed(2)} ${(cy-12*s).toFixed(2)}) scale(${s})" fill="none" stroke="${fg}" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><path d="${g.d}"/></g>`;
+  if(withS){
+    const fs = t.length<=3?16:t.length<=4?14:t.length<=6?11:9;
+    out += `<text x="50" y="${(cy+12*s+fs+1).toFixed(1)}" text-anchor="middle" font-family="Bricolage Grotesque, Segoe UI, sans-serif" font-weight="800" font-size="${fs}" letter-spacing="1" fill="${fg}">${esc(t)}</text>`;
+  }
+  return `<svg viewBox="-3 -3 106 106" role="img" aria-label="Logo${t?' de '+esc(t):''}">${out}</svg>`;
+}
+const logoTile = (l,s)=>`<div class="logo-tile">${logoSVG(l,s)}</div>`;
+
+/* ---------- code encode / decode ---------- */
+function toB64(bytes){let s='';for(let i=0;i<bytes.length;i++)s+=String.fromCharCode(bytes[i]);return btoa(s).replace(/=+$/,'');}
+function fromB64(str){while(str.length%4)str+='=';const bin=atob(str);return Uint8Array.from(bin,c=>c.charCodeAt(0));}
+async function encode(obj){
+  const bytes = new TextEncoder().encode(JSON.stringify(obj));
+  if(window.CompressionStream){
+    try{
+      const buf = await new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer();
+      return 'IN1z:'+toB64(new Uint8Array(buf));
+    }catch(e){}
+  }
+  return 'IN1p:'+toB64(bytes);
+}
+async function decode(code){
+  const kind = code[3], raw = fromB64(code.slice(5));
+  let bytes = raw;
+  if(kind==='z'){
+    const buf = await new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer();
+    bytes = new Uint8Array(buf);
+  }
+  return normalize(JSON.parse(new TextDecoder().decode(bytes)));
+}
+function normalize(d){
+  if(!d||typeof d!=='object')throw new Error('bad');
+  const str=(x,n=200)=>typeof x==='string'?x.slice(0,n):'';
+  const arr=(x,n)=>Array.from({length:n},(_,i)=>Math.max(0,Math.min(20,Math.round(+((x||[])[i])||0))));
+  const l=d.l||{};
+  const out={v:1,g:str(d.g),n:str(d.n),s:str(d.s,8),m:str(d.m),r:str(d.r),j:str(d.j),
+    l:{sh:SHAPES[l.sh]?l.sh:'escudo',gl:GLYPHS[l.gl]?l.gl:'libro',c:Math.max(0,Math.min(7,+l.c||0)),st:['relleno','contorno','anillo'].includes(l.st)?l.st:'relleno',si:!!l.si},
+    e:Array.isArray(d.e)?d.e.slice(0,3).map(x=>str(x,80)):[], b:arr(d.b,9), ev:EVENTS[d.ev]?d.ev:null, ea:d.ea===true?true:d.ea===false?false:null,
+    f:arr(d.f||d.b,9), er:str(d.er,400), rn:+d.rn||0, ej:!!d.ej};
+  if(!out.n)throw new Error('sin nombre');
+  return out;
+}
+
+/* ---------- student state ---------- */
+const BLANK = ()=>({step:0,grupo:'',n:'',s:'',sAuto:true,lema:'',r:'',j:'',l:{sh:'escudo',gl:'libro',c:0,st:'relleno',si:true},e:[],custom:[],b:Array(9).fill(0),ev:null,ea:null,f:null,fBase:null,er:'',rn:100+Math.floor(Math.random()*900)});
+let S = Object.assign(BLANK(), store.get('fti-borrador')||{});
+const save = ()=>store.set('fti-borrador',S);
+let mode = location.hash==='#docente'?'docente':'juego';
+let confirmReset = false;
+
+function siglaFrom(name){
+  return name.split(/[\s\-]+/).filter(w=>w&&!STOP.has(w.toLowerCase())).map(w=>w[0]).join('').toUpperCase().slice(0,8);
+}
+function finalAlloc(){
+  const ev = EVENTS[S.ev];
+  if(!ev) return S.b.slice();
+  if(ev.kind==='bonus' && S.ea!==true) return S.b.slice();
+  return (S.f||S.b).slice();
+}
+function toData(){
+  return {v:1,g:S.grupo.trim(),n:S.n.trim(),s:S.s.trim(),m:S.lema.trim(),r:S.r.trim(),j:S.j.trim(),l:S.l,e:S.e,b:S.b,ev:S.ev,ea:S.ea,f:finalAlloc(),er:S.er.trim(),rn:S.rn};
+}
+
+function eventCfg(){
+  const ev = EVENTS[S.ev];
+  const before = S.b.slice();
+  const cfg = {vals:S.f||before.slice(), before, min:Array(9).fill(0), max:Array(9).fill(MAXC), locked:Array(9).fill(false), target:TOTAL};
+  if(ev.kind==='cut'){ cfg.target = TOTAL-ev.n; }
+  else if(ev.kind==='force'){ const k=CATS.findIndex(c=>c.id===ev.cat); cfg.min[k]=Math.min(MAXC,before[k]+ev.n); }
+  else if(ev.kind==='bonus'){
+    if(S.ea!==true){ cfg.vals=before.slice(); cfg.locked=Array(9).fill(true); cfg.target=TOTAL; }
+    else { cfg.target=TOTAL+ev.n; CATS.forEach((c,i)=>{ if(ev.cats.includes(c.id)){cfg.min[i]=before[i]; cfg.max[i]=Math.max(MAXC,before[i]+ev.n);} else cfg.locked[i]=true; }); }
+  }
+  return cfg;
+}
+function stepProblem(step){
+  if(step===1){
+    const miss=[]; if(!S.n.trim())miss.push('nombre'); if(!S.r.trim())miss.push('revista'); if(!S.j.trim())miss.push('jornadas');
+    return miss.length?'Falta completar: '+miss.join(', '):'';
+  }
+  if(step===3){ const k=3-S.e.length; return k>0?`Elijan ${k} ${plural(k,'eje','ejes')} más`:''; }
+  if(step===4){ const left=TOTAL-sum(S.b); return left>0?`Quedan ${left} ${plural(left,'ficha','fichas')} por repartir`:''; }
+  if(step===5){
+    const ev=EVENTS[S.ev]; if(!ev) return 'Primero saquen una carta';
+    if(ev.kind==='bonus'){ if(S.ea===null) return 'Decidan si aceptan la oferta'; if(S.ea===false) return ''; }
+    const cfg=eventCfg(), s=sum(cfg.vals);
+    if(s!==cfg.target) return s>cfg.target?`Tienen que sacar ${s-cfg.target} ${plural(s-cfg.target,'ficha','fichas')}`:`Quedan ${cfg.target-s} ${plural(cfg.target-s,'ficha','fichas')} por repartir`;
+    if(cfg.vals.some((v,i)=>v<cfg.min[i])) return 'Todavía no cumplen lo que pide la carta';
+    return '';
+  }
+  return '';
+}
+
+/* ---------- budget editor ---------- */
+function editorHTML(cfg){
+  const {vals,before,min,max,locked,target} = cfg;
+  const s = sum(vals), left = target-s;
+  let cells=''; vals.forEach((v,i)=>{for(let j=0;j<v;j++)cells+=`<i style="background:var(--c${i+1})"></i>`;});
+  for(let j=s;j<target;j++)cells+='<i></i>';
+  const st = left>0?`<span>Quedan <b>${left}</b> ${plural(left,'ficha','fichas')} por repartir</span>`:left===0?'<span class="st-ok">Presupuesto completo</span>':`<span class="st-warn">Sobran ${-left} ${plural(-left,'ficha','fichas')}: saquen de algún lado</span>`;
+  let h = `<div class="bud-head"><div class="tot" style="grid-template-columns:repeat(${Math.max(target,s)},1fr)">${cells}</div><div class="status">${st}<span class="muted">${s} de ${target}</span></div></div><div>`;
+  CATS.forEach((c,i)=>{
+    const v=vals[i], b=before?before[i]:null, lk=locked[i];
+    let pips=''; for(let p=0;p<MAXC;p++){
+      let cls='pip'; if(p<v)cls+=' on'; else if(b!==null&&p<b)cls+=' cut'; if(b!==null&&p>=b&&p<v)cls+=' new';
+      pips+=`<button class="${cls}" data-act="set" data-i="${i}" data-v="${p+1}" ${lk?'disabled':''} aria-label="${esc(c.name)}: ${p+1}"></button>`;
+    }
+    const d = b!==null&&v!==b?`<span class="delta">${v>b?'+':''}${v-b}</span>`:'';
+    const note = min[i]>0&&!lk&&before?` <span class="muted">(mínimo ${min[i]})</span>`:'';
+    h+=`<div class="brow${lk?' locked':''}" style="--c:var(--c${i+1})">
+      <div class="brow-top"><span class="dot"></span><strong>${esc(c.name)}</strong>${note}<span class="val">${v}${d}</span></div>
+      <div class="brow-desc">${esc(c.desc)}</div>
+      <div class="ctl"><button class="stepb" data-act="minus" data-i="${i}" ${lk||v<=min[i]?'disabled':''} aria-label="Quitar ficha a ${esc(c.name)}">−</button>
+      <div class="pips">${pips}</div>
+      <button class="stepb" data-act="plus" data-i="${i}" ${lk||v>=max[i]||left<=0?'disabled':''} aria-label="Sumar ficha a ${esc(c.name)}">+</button></div>
+      <div class="quip">${esc(c.q[tier(v)])}</div></div>`;
+  });
+  return h+'</div>';
+}
+function bindEditor(el, getCfg, onChange){
+  el.addEventListener('click',e=>{
+    const b=e.target.closest('button[data-act]'); if(!b||b.disabled)return;
+    const cfg=getCfg(), i=+b.dataset.i, vals=cfg.vals.slice(), cur=vals[i];
+    let nv = b.dataset.act==='plus'?cur+1:b.dataset.act==='minus'?cur-1:+b.dataset.v;
+    if(b.dataset.act==='set'&&nv===cur) nv=cur-1;
+    if(nv>cur){
+      const room = cfg.target-(sum(vals)-cur);
+      nv = Math.min(nv, cfg.max[i], room);
+      if(nv<=cur) return;
+    } else {
+      nv = Math.max(nv, cfg.min[i]);
+      if(nv>=cur) return;
+    }
+    vals[i]=nv; onChange(vals);
+  });
+}
+
+/* ---------- student screens ---------- */
+function header(){
+  const st=S.step;
+  return `<header class="top"><div class="top-line"><span class="brand">Fundá tu instituto</span><span class="eyebrow">Paso ${st} de 6 · ${STEPS[st-1]}</span></div>
+  <div class="progress">${STEPS.map((_,i)=>`<i class="${i<st?'done':''}"></i>`).join('')}</div></header>`;
+}
+function nav(){
+  const prob = stepProblem(S.step);
+  const last = S.step===5;
+  return `<nav class="nav"><div class="nav-in"><button class="btn ghost" id="back">Atrás</button><span class="nav-hint" id="hint">${esc(prob)}</span>
+  <button class="btn primary" id="next" ${prob?'disabled':''}>${last?'Firmar el acta':'Siguiente'}</button></div></nav>`;
+}
+function refreshNav(){
+  const prob=stepProblem(S.step), n=$('#next'), h=$('#hint');
+  if(n)n.disabled=!!prob; if(h)h.textContent=prob;
+}
+function go(step){ S.step=step; save(); render(); window.scrollTo(0,0); }
+
+function render(){
+  if(mode==='docente') return renderTeacher();
+  const st=S.step;
+  if(st===0) return renderIntro();
+  if(st===6) return renderFinal();
+  const body = [null,stepIdentidad,stepLogo,stepEjes,stepPresupuesto,stepImprevisto][st]();
+  app.innerHTML = `<main class="wrap">${header()}${body}</main>${nav()}`;
+  $('#back').onclick=()=>go(st-1);
+  $('#next').onclick=()=>{ if(!stepProblem(st)) go(st+1); };
+  [null,bindIdentidad,bindLogo,bindEjes,bindPresupuesto,bindImprevisto][st]();
+}
+
+function renderIntro(){
+  const started = S.step>0 || S.n;
+  app.innerHTML = `<main class="wrap intro">
+    <p class="eyebrow">Trabajo en grupo · unos 20 minutos</p>
+    <h1>Fundá tu instituto de investigación</h1>
+    <p class="lede">Su grupo va a crear un instituto de Humanidades y Ciencias Sociales. Le ponen nombre, arman una revista y unas jornadas, diseñan el logo, eligen qué investigar y reparten un presupuesto que no alcanza para todo.</p>
+    <div class="intro-art" aria-hidden="true">${logoTile(SAMPLES[0].l,'IEMT')}${logoTile(SAMPLES[1].l,'CHDL')}${logoTile({sh:'sello',gl:'mate',c:1,st:'relleno',si:false},'')}${logoTile({sh:'arco',gl:'columna',c:4,st:'relleno',si:true},'IIH')}</div>
+    <section class="sheet">
+      <div class="field"><label for="grupo">Integrantes del grupo</label><input type="text" id="grupo" value="${esc(S.grupo)}" placeholder="Ana, Lucas, Ramiro, Sol" autocomplete="off"><span class="hint">Opcional. Aparece al pie del acta de fundación.</span></div>
+      <div><p class="mono-label" style="margin-bottom:6px">Qué van a decidir</p>
+      <ol class="plan">${STEPS.map((s,i)=>`<li>${['Nombre, sigla, lema, revista y jornadas','Diseño del logo','Tres ejes de investigación','Cómo se reparten 20 fichas de presupuesto','Una carta con un imprevisto','Acta de fundación para mostrar al curso'][i]}</li>`).join('')}</ol></div>
+      <div class="btns"><button class="btn primary" id="start">${started?'Seguir donde quedamos':'Empezar'}</button>${started?'<button class="btn ghost" id="fresh">Empezar de cero</button>':''}</div>
+      <div id="freshConfirm"></div>
+    </section>
+    <p class="small muted">¿Sos docente? <a href="#docente" id="toDoc">Ver y proyectar los institutos del curso</a></p>
+  </main>`;
+  $('#grupo').oninput=e=>{S.grupo=e.target.value; save();};
+  $('#start').onclick=()=>go(Math.max(1,S.step));
+  $('#toDoc').onclick=e=>{e.preventDefault(); setMode('docente');};
+  const f=$('#fresh'); if(f) f.onclick=()=>{
+    $('#freshConfirm').innerHTML=`<div class="confirm"><span>Se borra todo lo que cargaron en este dispositivo.</span><button class="btn small primary" id="freshYes">Borrar y empezar</button><button class="btn small ghost" id="freshNo">Cancelar</button></div>`;
+    $('#freshYes').onclick=()=>{S=BLANK(); save(); render();};
+    $('#freshNo').onclick=()=>{$('#freshConfirm').innerHTML='';};
+  };
+}
+
+function stepIdentidad(){
+  return `<section class="sheet">
+    <div><h2>¿Cómo se llama el instituto?</h2><p class="muted">Piensen un nombre que diga qué estudian. Las siglas son sagradas en la vida académica.</p></div>
+    <div class="row2">
+      <div class="field"><label for="n">Nombre del instituto</label><input type="text" id="n" maxlength="110" value="${esc(S.n)}" placeholder="Instituto de Investigaciones en Humanidades" autocomplete="off"></div>
+      <div class="field"><label for="s">Sigla</label><input type="text" id="s" maxlength="8" value="${esc(S.s)}" placeholder="IIH" autocomplete="off"></div>
+    </div>
+    <div class="field"><label for="lema">Lema <span class="muted" style="font-weight:400">(opcional)</span></label><input type="text" id="lema" maxlength="90" value="${esc(S.lema)}" placeholder="Pensar desde el sur" autocomplete="off"></div>
+    <div class="field"><label for="r">Revista académica del instituto</label><input type="text" id="r" maxlength="110" value="${esc(S.r)}" placeholder="Cuadernos del Sur. Revista de Humanidades" autocomplete="off"></div>
+    <div class="field"><label for="j">Jornadas anuales</label><input type="text" id="j" maxlength="130" value="${esc(S.j)}" placeholder="Jornadas de Jóvenes Investigadores en Humanidades" autocomplete="off"></div>
+  </section>`;
+}
+function bindIdentidad(){
+  $('#n').oninput=e=>{S.n=e.target.value; if(S.sAuto){S.s=siglaFrom(S.n); $('#s').value=S.s;} save(); refreshNav();};
+  $('#s').oninput=e=>{S.s=e.target.value.toUpperCase(); e.target.value=S.s; S.sAuto=!S.s; save();};
+  ['lema','r','j'].forEach(k=>{$('#'+k).oninput=e=>{S[k]=e.target.value; save(); refreshNav();};});
+}
+
+function stepLogo(){
+  const l=S.l;
+  const shapeBtns=Object.entries(SHAPES).map(([k,lab])=>`<button class="opt" data-k="sh" data-v="${k}" aria-pressed="${l.sh===k}" aria-label="${lab}" title="${lab}"><svg viewBox="-3 -3 106 106">${shapeEl(k,'fill="currentColor"')}</svg></button>`).join('');
+  const glyphBtns=Object.entries(GLYPHS).map(([k,g])=>`<button class="opt" data-k="gl" data-v="${k}" aria-pressed="${l.gl===k}" aria-label="${g.l}" title="${g.l}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="${g.d}"/></svg></button>`).join('');
+  const sw=LCOLORS.map((c,i)=>`<button class="sw" data-k="c" data-v="${i}" aria-pressed="${l.c===i}" style="background:${c}" aria-label="Color ${i+1}"></button>`).join('');
+  const sty=[['relleno','Relleno'],['anillo','Con borde'],['contorno','Solo contorno']].map(([k,t])=>`<button class="chip" data-k="st" data-v="${k}" aria-pressed="${l.st===k}">${t}</button>`).join('');
+  return `<section class="sheet">
+    <div><h2>El logo</h2><p class="muted">Va a estar en la revista, en los afiches de las jornadas y en cada certificado.</p></div>
+    <div class="logo-stage"><div class="logo-tile" id="logoPrev">${logoSVG(l,S.s)}</div>
+      <div style="display:grid;gap:8px"><strong style="font-family:var(--f-display);font-size:1.2rem">${esc(S.n||'Su instituto')}</strong>
+      <div class="btns"><button class="btn small ghost" id="rnd">Probar uno al azar</button></div></div></div>
+    <div class="opt-group"><h3>Forma</h3><div class="opts">${shapeBtns}</div></div>
+    <div class="opt-group"><h3>Símbolo</h3><div class="opts">${glyphBtns}</div></div>
+    <div class="opt-group"><h3>Color</h3><div class="swatches">${sw}</div></div>
+    <div class="opt-group"><h3>Estilo</h3><div class="seg">${sty}<button class="chip" data-k="si" data-v="1" aria-pressed="${!!l.si}" ${S.s?'':'disabled'}>Sigla dentro del logo</button></div></div>
+  </section>`;
+}
+function bindLogo(){
+  $('.sheet').addEventListener('click',e=>{
+    const b=e.target.closest('[data-k]'); if(!b||b.disabled)return;
+    const k=b.dataset.k;
+    if(k==='si') S.l.si=!S.l.si; else S.l[k]= k==='c'?+b.dataset.v:b.dataset.v;
+    save(); render();
+  });
+  $('#rnd').onclick=()=>{
+    const pick=a=>a[Math.floor(Math.random()*a.length)];
+    S.l={sh:pick(Object.keys(SHAPES)),gl:pick(Object.keys(GLYPHS)),c:Math.floor(Math.random()*LCOLORS.length),st:pick(['relleno','relleno','anillo','contorno']),si:S.l.si};
+    save(); render();
+  };
+}
+
+function stepEjes(){
+  const all=[...EJES,...S.custom];
+  const full=S.e.length>=3;
+  return `<section class="sheet">
+    <div><h2>Ejes de investigación</h2><p class="muted">Elijan tres líneas que el instituto va a privilegiar. Lo que no elijan no desaparece, pero no va a tener prioridad en concursos, becas ni fondos.</p></div>
+    <div><span class="count-pill">${S.e.length} de 3 elegidos</span></div>
+    <div class="chips">${all.map(x=>{const on=S.e.includes(x);return `<button class="chip" data-eje="${esc(x)}" aria-pressed="${on}" ${!on&&full?'disabled':''}>${esc(x)}</button>`;}).join('')}</div>
+    <div class="field"><label for="otro">¿Falta alguno? Agréguenlo</label>
+      <div class="add-row"><input type="text" id="otro" maxlength="60" placeholder="Estudios sobre el deporte" autocomplete="off"><button class="btn" id="addEje">Agregar</button></div></div>
+  </section>`;
+}
+function bindEjes(){
+  $('.chips').addEventListener('click',e=>{
+    const b=e.target.closest('[data-eje]'); if(!b||b.disabled)return;
+    const x=b.dataset.eje;
+    S.e = S.e.includes(x)?S.e.filter(y=>y!==x):S.e.length<3?[...S.e,x]:S.e;
+    save(); render();
+  });
+  const add=()=>{
+    const v=$('#otro').value.trim(); if(!v)return;
+    if(![...EJES,...S.custom].includes(v)) S.custom.push(v);
+    if(S.e.length<3&&!S.e.includes(v)) S.e.push(v);
+    save(); render();
+  };
+  $('#addEje').onclick=add;
+  $('#otro').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();add();}};
+}
+
+function stepPresupuesto(){
+  return `<section class="sheet">
+    <div><h2>El presupuesto</h2><p class="muted">Tienen <b>20 fichas</b> para todo el año; cada una es el 5 % del presupuesto. Una sola área puede recibir hasta 10. Toquen los casilleros o usen − y +.</p></div>
+    <div id="editor">${editorHTML(budgetCfg())}</div>
+  </section>`;
+}
+function budgetCfg(){ return {vals:S.b.slice(), before:null, min:Array(9).fill(0), max:Array(9).fill(MAXC), locked:Array(9).fill(false), target:TOTAL}; }
+function bindPresupuesto(){
+  const el=$('#editor');
+  bindEditor(el, budgetCfg, vals=>{ S.b=vals; S.f=null; S.fBase=null; save(); el.innerHTML=editorHTML(budgetCfg()); refreshNav(); });
+}
+
+function stepImprevisto(){
+  if(S.fBase!==JSON.stringify(S.b)){ S.f=null; S.fBase=JSON.stringify(S.b); save(); }
+  const ev=EVENTS[S.ev];
+  if(!ev){
+    return `<section class="sheet">
+      <div><h2>Imprevisto</h2><p class="muted">En la vida de un instituto casi nada sale como se planificó. Saquen una carta y ajusten el presupuesto.</p></div>
+      <div class="evback"><span class="q" aria-hidden="true">?</span><button class="btn primary" id="draw">Sacar una carta</button></div>
+    </section>`;
+  }
+  let extra='';
+  if(ev.kind==='bonus'){
+    extra = `<div class="choice"><button class="btn" data-ea="1" aria-pressed="${S.ea===true}">Aceptamos</button><button class="btn" data-ea="0" aria-pressed="${S.ea===false}">Rechazamos</button></div>`;
+  }
+  const showEditor = ev.kind!=='bonus' || S.ea!==null;
+  const lead = ev.kind==='cut'?`Ahora el total es de ${TOTAL-ev.n} fichas.`:ev.kind==='force'?'Las rayadas muestran lo que tenían antes.':S.ea===true?`Repartan las ${ev.n} fichas nuevas entre las áreas habilitadas.`:S.ea===false?'El presupuesto queda como estaba.':'';
+  return `<section class="sheet">
+    <div class="evcard"><span class="mono-label">Imprevisto</span><h2>${esc(ev.title)}</h2><p>${esc(ev.text)}</p>${extra}</div>
+    ${showEditor?`<p class="muted">${esc(lead)}</p><div id="editor">${editorHTML(eventCfg())}</div>`:''}
+    <div class="field"><label for="er">¿Qué decidieron y por qué?</label><textarea id="er" rows="3" maxlength="400" placeholder="Priorizamos las becas porque sin gente formada no hay instituto.">${esc(S.er)}</textarea><span class="hint">Una o dos oraciones. Esto se lee en voz alta al final.</span></div>
+  </section>`;
+}
+function bindImprevisto(){
+  const d=$('#draw'); if(d) d.onclick=()=>{ const ks=Object.keys(EVENTS); S.ev=ks[Math.floor(Math.random()*ks.length)]; S.ea=null; S.f=S.b.slice(); save(); render(); };
+  document.querySelectorAll('[data-ea]').forEach(b=>b.onclick=()=>{ S.ea=b.dataset.ea==='1'; S.f=S.b.slice(); save(); render(); });
+  const el=$('#editor');
+  if(el) bindEditor(el, eventCfg, vals=>{ S.f=vals; save(); el.innerHTML=editorHTML(eventCfg()); refreshNav(); });
+  const er=$('#er'); if(er) er.oninput=e=>{S.er=e.target.value; save();};
+}
+
+/* ---------- acta ---------- */
+function renderActa(d){
+  const ev=EVENTS[d.ev];
+  const f=d.f, b=d.b, tot=sum(f)||1;
+  const bars=CATS.map((c,i)=>{
+    const v=f[i], dl=v-b[i];
+    return `<div class="bar-row${v?'':' zero'}" style="--c:var(--c${i+1})"><span>${esc(c.name)}</span><div class="bar-track"><div class="bar-fill" style="width:${v/MAXC*100}%"></div></div><span class="bar-num">${v?`${v} · ${Math.round(v/tot*100)} %`:'sin fondos'}${ev&&dl?` <span class="delta">${dl>0?'+':''}${dl}</span>`:''}</span></div>`;
+  }).join('');
+  const evTxt = ev?`<div class="imp"><h3>Imprevisto · ${esc(ev.title)}</h3>${ev.kind==='bonus'?`<p><b>${d.ea?'Aceptaron la oferta.':'Rechazaron la oferta.'}</b></p>`:''}${d.er?`<p>«${esc(d.er)}»</p>`:''}</div>`:'';
+  const yr = new Date().getFullYear();
+  return `<article class="acta">
+    <p class="mono-label">Resolución N.º ${String(d.rn||0).padStart(4,'0')}/${yr}</p>
+    <div class="acta-head">${logoTile(d.l,d.s)}<div class="acta-title"><h2>${esc(d.n)}</h2>${d.s?`<span class="acta-sigla">${esc(d.s)}</span>`:''}${d.m?`<span class="acta-lema">«${esc(d.m)}»</span>`:''}</div></div>
+    <p class="visto">VISTO que la investigación en Humanidades y Ciencias Sociales es indispensable, y CONSIDERANDO que el presupuesto nunca alcanza para todo, EL CONSEJO DIRECTIVO RESUELVE:</p>
+    <ol class="arts">
+      <li><b>Art. 1.º</b>Créase el ${esc(d.n)}${d.s?` (${esc(d.s)})`:''}.</li>
+      <li><b>Art. 2.º</b>Su publicación periódica será la revista <i>${esc(d.r)}</i>.</li>
+      <li><b>Art. 3.º</b>Realizará cada año las ${esc(d.j)}.</li>
+      <li><b>Art. 4.º</b>Sus ejes prioritarios de investigación serán: ${d.e.map(esc).join('; ')||'a definir'}.</li>
+      <li><b>Art. 5.º</b>El presupuesto se distribuye según el Anexo I.</li>
+    </ol>
+    <section class="anexo"><h3>Anexo I · Distribución del presupuesto (${sum(f)} fichas)</h3>${bars}</section>
+    ${evTxt}
+    ${d.g?`<p class="firmas">Firman: ${esc(d.g)}</p>`:''}
+    <div class="stamp">APROBADO<small>Consejo Directivo</small></div>
+  </article>`;
+}
+
+/* ---------- PDF ---------- */
+let libsP=null;
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('load'));document.head.appendChild(s);});}
+function loadLibs(){
+  if(!libsP) libsP=Promise.all([
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'),
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')
+  ]).catch(e=>{libsP=null; throw e;});
+  return libsP;
+}
+async function getDownloads(){ try{ return (window.claude&&window.claude.use)?await window.claude.use('downloads'):null; }catch(e){ return null; } }
+const pdfName = base=>'Acta - '+String(base||'instituto').replace(/[\\\/:*?"<>|]+/g,' ').trim().slice(0,80)+'.pdf';
+let pdfBusy=false;
+async function exportPDF(list, filename, msgEl){
+  const say=t=>{ if(msgEl&&msgEl.isConnected) msgEl.textContent=t; };
+  if(pdfBusy) return;
+  const dl=await getDownloads();
+  const direct=!dl && !(window.claude&&window.claude.use);
+  if(!dl&&!direct){ say('La descarga de archivos no está disponible en esta vista.'); return; }
+  pdfBusy=true; say('Preparando el PDF…');
+  const host=document.createElement('div'); host.className='pdf-light';
+  try{
+    await loadLibs();
+    try{ await document.fonts.ready; }catch(e){}
+    document.body.appendChild(host);
+    const pdf=new window.jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
+    const PW=210, PH=297, M=10;
+    for(let i=0;i<list.length;i++){
+      if(list.length>1) say(`Preparando el PDF… (${i+1} de ${list.length})`);
+      host.innerHTML=renderActa(list[i]);
+      const canvas=await window.html2canvas(host.firstElementChild,{scale:2,backgroundColor:'#FFFFFF',logging:false});
+      let w=PW-2*M, h=canvas.height*w/canvas.width;
+      if(h>PH-2*M){ h=PH-2*M; w=canvas.width*h/canvas.height; }
+      if(i>0) pdf.addPage();
+      pdf.addImage(canvas.toDataURL('image/jpeg',0.92),'JPEG',(PW-w)/2,M,w,h);
+    }
+    host.remove();
+    const blob=pdf.output('blob');
+    if(dl){
+      say('Confirmá la descarga.');
+      await dl.save({filename, data:blob});
+    } else {
+      const url=URL.createObjectURL(blob), a=document.createElement('a');
+      a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),10000);
+    }
+    say('PDF descargado.');
+  }catch(e){
+    const c=e&&e.code;
+    say(c==='declined'?'Descarga cancelada.':c==='rate_limited'?'Ya hay una descarga esperando confirmación.':e&&e.message==='load'?'No se pudieron cargar las herramientas para armar el PDF. Revisen la conexión y prueben de nuevo.':'No se pudo generar el PDF.');
+  }finally{ host.remove(); pdfBusy=false; }
+}
+
+function renderFinal(){
+  const d=toData();
+  app.innerHTML=`<main class="wrap">${header()}
+    ${renderActa(d)}
+    <div class="btns" style="align-items:center"><button class="btn" id="pdf">Descargar el acta en PDF</button><span class="note" id="pdfMsg" aria-live="polite"></span></div>
+    <section class="sheet share">
+      <div><h2>Mandale el instituto al docente</h2><p class="muted">Copien este código y envíenlo por el canal que les indicaron (WhatsApp, mail, el aula virtual).</p></div>
+      <textarea class="code" id="code" readonly aria-label="Código del instituto">Generando código…</textarea>
+      <div class="btns"><button class="btn primary" id="copy">Copiar código</button><a class="btn" id="wa" href="#" target="_blank" rel="noopener">Enviar por WhatsApp</a></div>
+      <p class="note" id="copyMsg" aria-live="polite"></p>
+    </section>
+    <div class="btns"><button class="btn ghost" id="edit">Volver a editar</button><button class="btn ghost" id="again">Fundar otro instituto</button></div>
+    <div id="againConfirm"></div>
+  </main>`;
+  encode(d).then(code=>{
+    $('#code').value=code;
+    $('#wa').href='https://wa.me/?text='+encodeURIComponent(`${d.n}${d.s?' ('+d.s+')':''}\n${code}`);
+  });
+  $('#copy').onclick=()=>{
+    const t=$('#code'), msg=$('#copyMsg');
+    const fallback=()=>{t.focus(); t.select(); msg.textContent='Código seleccionado: copienlo con Ctrl+C o manteniendo apretado.';};
+    try{ navigator.clipboard.writeText(t.value).then(()=>{msg.textContent='Copiado. Ahora péguenlo en el mensaje.';},fallback); }catch(e){ fallback(); }
+  };
+  $('#pdf').onclick=()=>exportPDF([d], pdfName(d.s||d.n), $('#pdfMsg'));
+  $('#edit').onclick=()=>go(1);
+  $('#again').onclick=()=>{
+    $('#againConfirm').innerHTML=`<div class="confirm"><span>¿Ya mandaron el código? Esto borra este instituto del dispositivo.</span><button class="btn small primary" id="aYes">Sí, empezar otro</button><button class="btn small ghost" id="aNo">Cancelar</button></div>`;
+    $('#aYes').onclick=()=>{S=BLANK(); save(); render(); window.scrollTo(0,0);};
+    $('#aNo').onclick=()=>{$('#againConfirm').innerHTML='';};
+  };
+}
+
+/* ---------- docente ---------- */
+let T = {list:store.get('fti-docente')||[], tab:'galeria', panel:null, msg:'', spot:-1, confirmClear:false, confirmDel:-1};
+const saveT=()=>store.set('fti-docente',T.list);
+const keyOf=d=>(d.n+'|'+d.s).toLowerCase();
+function setMode(m){ mode=m; try{ history.replaceState(null,'',m==='docente'?'#docente':'#juego'); }catch(e){} render(); window.scrollTo(0,0); }
+
+function renderTeacher(){
+  const L=T.list;
+  const panelOpen = T.panel===null ? L.length===0 : T.panel;
+  const hasEj = L.some(d=>d.ej);
+  let content='';
+  if(!L.length){
+    content=`<div class="empty"><h2>Todavía no hay institutos</h2><p class="muted">Pegá arriba los códigos que te mandan los grupos. Para probar cómo se ve, cargá dos institutos de ejemplo.</p><button class="btn" id="loadEj">Cargar ejemplos</button></div>`;
+  } else if(T.tab==='galeria'){
+    content=`<div class="gallery">${L.map((d,i)=>{
+      const tot=sum(d.f)||1;
+      return `<article class="icard">${d.ej?'<span class="tag-ej">Ejemplo</span>':''}
+        <button class="icard-open" data-open="${i}" aria-label="Presentar ${esc(d.n)}">
+        <div class="icard-top">${logoTile(d.l,d.s)}<div style="display:grid;gap:4px;min-width:0"><h2>${esc(d.n)}</h2>${d.s?`<span class="acta-sigla">${esc(d.s)}</span>`:''}</div></div>
+        ${d.m?`<p class="acta-lema">«${esc(d.m)}»</p>`:''}
+        <div class="meta"><div><span>Revista:</span> <i>${esc(d.r)}</i></div><div><span>Jornadas:</span> ${esc(d.j)}</div></div>
+        <div class="chips">${d.e.map(x=>`<span class="chip static">${esc(x)}</span>`).join('')}</div>
+        <div class="stack" aria-label="Distribución del presupuesto">${d.f.map((v,k)=>v?`<i style="--c:var(--c${k+1});width:${v/tot*100}%" title="${esc(CATS[k].name)}: ${v}"></i>`:'').join('')}</div>
+        ${EVENTS[d.ev]?`<p class="small muted">Imprevisto: ${esc(EVENTS[d.ev].title)}${EVENTS[d.ev].kind==='bonus'?(d.ea?' · aceptaron':' · rechazaron'):''}</p>`:''}
+        </button>
+        ${T.confirmDel===i?`<div class="confirm"><span>¿Quitar este instituto?</span><button class="btn small primary" data-delyes="${i}">Quitar</button><button class="btn small ghost" data-delno="1">Cancelar</button></div>`:`<button class="btn small ghost x" data-del="${i}">Quitar</button>`}
+      </article>`;}).join('')}</div>
+      <div class="legend">${CATS.map((c,i)=>`<span><span class="dot" style="--c:var(--c${i+1})"></span>${esc(c.short)}</span>`).join('')}</div>`;
+  } else {
+    const avg=CATS.map((_,k)=>sum(L.map(d=>d.f[k]))/L.length);
+    const cell=v=>`<td style="background:color-mix(in srgb,var(--accent) ${Math.min(100,Math.round(v*9))}%,transparent);color:${v>=5?'var(--accent-ink)':'var(--ink)'}">${Number.isInteger(v)?v:v.toFixed(1)}</td>`;
+    content=`<div class="heat-wrap"><table class="heat"><thead><tr><th></th>${CATS.map(c=>`<th>${esc(c.short)}</th>`).join('')}</tr></thead><tbody>
+      ${L.map(d=>`<tr><th class="rowh"><div class="in">${logoTile(d.l,d.s)}<span>${esc(d.s||d.n)}</span></div></th>${d.f.map(cell).join('')}</tr>`).join('')}
+      <tr class="avg"><th class="rowh">Promedio del curso</th>${avg.map(cell).join('')}</tr></tbody></table></div>
+      <p class="small muted">Fichas por área después del imprevisto. Cuanto más intenso el color, más presupuesto.</p>`;
+  }
+  app.innerHTML=`<main class="t-wrap">
+    <header class="t-head"><div style="display:grid;gap:6px"><p class="eyebrow">Fundá tu instituto · vista docente</p><h1>Institutos del curso${L.length?` <span class="muted" style="font-weight:500">(${L.length})</span>`:''}</h1></div>
+      <div class="tabs">
+        ${L.length?`<button class="btn" data-tab="galeria" aria-pressed="${T.tab==='galeria'}">Galería</button><button class="btn" data-tab="comparar" aria-pressed="${T.tab==='comparar'}">Comparar presupuestos</button><button class="btn primary" id="present">Presentar uno por uno</button><button class="btn ghost" id="pdfAll">Todas las actas en PDF</button>`:''}
+        <button class="btn ghost" id="togglePanel">${panelOpen?'Ocultar códigos':'Agregar códigos'}</button>
+      </div></header>
+    <p class="note" id="pdfAllMsg" aria-live="polite"></p>
+    ${panelOpen?`<section class="add-panel">
+      <div class="field"><label for="codes">Pegá los códigos de los grupos</label>
+      <textarea id="codes" placeholder="IN1z:..." spellcheck="false"></textarea>
+      <span class="hint">Podés pegar varios juntos, o directamente todo el chat de WhatsApp: se toman solo los códigos. Si un grupo manda una versión nueva, reemplaza a la anterior.</span></div>
+      <div class="btns"><button class="btn primary" id="addCodes">Agregar institutos</button>${hasEj?'<button class="btn ghost" id="dropEj">Quitar ejemplos</button>':''}${L.length?(T.confirmClear?'<button class="btn" id="clearYes">Sí, borrar todos</button><button class="btn ghost" id="clearNo">Cancelar</button>':'<button class="btn ghost" id="clear">Borrar todos</button>'):''}</div>
+      <p class="note" aria-live="polite">${esc(T.msg)}</p>
+      <p class="small muted">Los institutos quedan guardados solo en este navegador. Para que los grupos jueguen, compartí el mismo link de esta página sin el final <code>#docente</code>. <a href="#juego" id="toGame">Ir al juego</a></p>
+    </section>`:''}
+    ${content}
+  </main>${T.spot>=0&&L[T.spot]?spotHTML():''}`;
+  bindTeacher();
+}
+function spotHTML(){
+  const L=T.list, i=T.spot;
+  return `<div class="spot" role="dialog" aria-label="Presentación"><div class="spot-in">
+    <div class="spot-bar"><button class="btn ghost" id="sPrev" ${i===0?'disabled':''}>← Anterior</button><span class="mono-label">${i+1} de ${L.length}</span><button class="btn ghost" id="sNext" ${i===L.length-1?'disabled':''}>Siguiente →</button><button class="btn ghost" id="sPdf">PDF</button><button class="btn" id="sClose">Cerrar</button></div>
+    <p class="note" id="sPdfMsg" aria-live="polite"></p>
+    ${renderActa(L[i])}</div></div>`;
+}
+function bindTeacher(){
+  const on=(id,fn)=>{const el=$('#'+id); if(el) el.onclick=fn;};
+  on('togglePanel',()=>{ const open=T.panel===null?T.list.length===0:T.panel; T.panel=!open; T.msg=''; render(); });
+  on('loadEj',()=>{ SAMPLES.forEach(s=>upsert(normalize(s))); saveT(); T.panel=false; render(); });
+  on('dropEj',()=>{ T.list=T.list.filter(d=>!d.ej); saveT(); render(); });
+  on('clear',()=>{ T.confirmClear=true; render(); });
+  on('clearNo',()=>{ T.confirmClear=false; render(); });
+  on('clearYes',()=>{ T.list=[]; T.confirmClear=false; saveT(); T.msg='Se borraron todos los institutos.'; render(); });
+  on('toGame',e=>{ e.preventDefault(); setMode('juego'); });
+  on('present',()=>{ T.spot=0; render(); });
+  on('addCodes',async()=>{
+    const txt=$('#codes').value;
+    const codes=[...new Set(txt.match(/IN1[zp]:[A-Za-z0-9+\/]{16,}/g)||[])];
+    if(!codes.length){ T.msg='No se encontró ningún código. Cada código empieza con IN1z: o IN1p:'; render(); return; }
+    let ok=0, bad=0;
+    for(const c of codes){ try{ upsert(await decode(c)); ok++; }catch(e){ bad++; } }
+    saveT();
+    T.msg=`${ok} ${plural(ok,'instituto agregado','institutos agregados')}.`+(bad?` ${bad} ${plural(bad,'código no se pudo leer','códigos no se pudieron leer')}: pediles que lo copien de nuevo completo.`:'');
+    render();
+  });
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{T.tab=b.dataset.tab; render();});
+  document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{T.spot=+b.dataset.open; render();});
+  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{T.confirmDel=+b.dataset.del; render();});
+  document.querySelectorAll('[data-delno]').forEach(b=>b.onclick=()=>{T.confirmDel=-1; render();});
+  document.querySelectorAll('[data-delyes]').forEach(b=>b.onclick=()=>{T.list.splice(+b.dataset.delyes,1); T.confirmDel=-1; saveT(); render();});
+  on('sPrev',()=>{T.spot=Math.max(0,T.spot-1); render();});
+  on('sNext',()=>{T.spot=Math.min(T.list.length-1,T.spot+1); render();});
+  on('sClose',()=>{T.spot=-1; render();});
+  on('sPdf',()=>{ const d=T.list[T.spot]; exportPDF([d], pdfName(d.s||d.n), $('#sPdfMsg')); });
+  on('pdfAll',()=>exportPDF(T.list.slice(), 'Actas de fundación - institutos del curso.pdf', $('#pdfAllMsg')));
+  const sp=$('.spot'); if(sp) sp.scrollTop=0;
+}
+function upsert(d){
+  const k=keyOf(d), i=T.list.findIndex(x=>keyOf(x)===k);
+  if(i>=0) T.list[i]=d; else T.list.push(d);
+}
+document.addEventListener('keydown',e=>{
+  if(mode!=='docente'||T.spot<0)return;
+  if(e.key==='ArrowRight'&&T.spot<T.list.length-1){T.spot++; render();}
+  else if(e.key==='ArrowLeft'&&T.spot>0){T.spot--; render();}
+  else if(e.key==='Escape'){T.spot=-1; render();}
+});
+window.addEventListener('hashchange',()=>{ const m=location.hash==='#docente'?'docente':'juego'; if(m!==mode){mode=m; render();} });
+
+render();
+})();
+</script>
+</body>
+</html>
