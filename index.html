@@ -177,48 +177,10 @@ input[type=text]:focus,textarea:focus{border-color:var(--accent)}
 .stamp{justify-self:end; font-family:var(--f-display); font-weight:800; color:var(--stamp); border:4px double var(--stamp); border-radius:10px; padding:6px 16px 4px; text-align:center; transform:rotate(-8deg); letter-spacing:.14em; font-size:1.5rem; line-height:1.1; opacity:.88; animation:stamp .45s cubic-bezier(.2,.9,.3,1.3) .25s both}
 .stamp small{display:block; font-family:var(--f-mono); font-weight:500; font-size:.62rem; letter-spacing:.1em}
 @keyframes stamp{from{transform:rotate(-8deg) scale(2.4); opacity:0} to{transform:rotate(-8deg) scale(1); opacity:.88}}
-.share{display:grid; gap:10px}
-.code{font-family:var(--f-mono); font-size:.8rem; word-break:break-all; min-height:90px; resize:vertical}
 .btns{display:flex; gap:10px; flex-wrap:wrap}
 .note{font-size:.9rem; color:var(--ink-2)}
 .confirm{display:flex; gap:10px; align-items:center; flex-wrap:wrap; padding:10px 12px; border-radius:10px; background:var(--paper-2); border:1px solid var(--line)}
 
-/* docente */
-.t-wrap{max-width:1400px; margin:0 auto; padding-inline:clamp(16px,3vw,32px); padding-block:24px 60px; display:grid; gap:22px; font-size:17px}
-.t-head{display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap}
-.t-head h1{font-size:clamp(2rem,4vw,3rem); font-weight:800; letter-spacing:-.02em}
-.tabs{display:flex; gap:8px; flex-wrap:wrap}
-.tabs .btn[aria-pressed="true"]{background:var(--ink); color:var(--paper); border-color:var(--ink)}
-.add-panel{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:18px; display:grid; gap:12px}
-.add-panel textarea{min-height:110px; font-family:var(--f-mono); font-size:.85rem}
-.gallery{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr)); gap:18px}
-.icard{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:18px; display:grid; gap:12px; align-content:start; position:relative}
-.icard-open{all:unset; cursor:pointer; display:grid; gap:12px}
-.icard-open:focus-visible{outline:3px solid var(--accent); outline-offset:6px; border-radius:8px}
-.icard-top{display:flex; gap:14px; align-items:center}
-.icard-top .logo-tile{width:84px; height:84px}
-.icard h2{font-size:1.3rem; font-weight:800; overflow-wrap:anywhere}
-.icard .meta{display:grid; gap:2px; font-size:.95rem}
-.icard .meta span{color:var(--ink-2)}
-.stack{display:flex; height:16px; border-radius:4px; overflow:hidden; background:var(--line)}
-.stack i{background:var(--c); height:100%}
-.tag-ej{position:absolute; top:12px; right:12px; font-family:var(--f-mono); font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; padding:.15em .5em; border-radius:6px; background:var(--accent-soft)}
-.icard .x{justify-self:start}
-.legend{display:flex; flex-wrap:wrap; gap:6px 16px; font-size:.88rem; color:var(--ink-2)}
-.legend span{display:inline-flex; align-items:center; gap:6px}
-.heat-wrap{overflow-x:auto; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:12px}
-.heat{border-collapse:separate; border-spacing:4px; width:100%; min-width:760px}
-.heat th{font-size:.82rem; font-weight:700; color:var(--ink-2); text-align:center; vertical-align:bottom; padding:4px}
-.heat th.rowh{text-align:left; color:var(--ink); font-size:.95rem}
-.heat th.rowh .in{display:flex; align-items:center; gap:10px}
-.heat th.rowh .logo-tile{width:40px; height:40px; border-radius:10px}
-.heat td{font-family:var(--f-mono); font-size:1.15rem; text-align:center; border-radius:6px; padding:10px 6px; font-variant-numeric:tabular-nums}
-.heat tr.avg th,.heat tr.avg td{border-top:2px solid var(--line); font-weight:500}
-.empty{background:var(--paper); border:1.5px dashed var(--line); border-radius:14px; padding:28px; display:grid; gap:10px; justify-items:start}
-.spot{position:fixed; inset:0; z-index:60; background:var(--bg); overflow:auto; padding:env(safe-area-inset-top,0px) 16px env(safe-area-inset-bottom,0px)}
-.spot-in{max-width:920px; margin:0 auto; padding-block:16px 40px; display:grid; gap:14px}
-.spot-bar{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
-.spot .acta{font-size:1.08rem}
 @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
 </style>
 
@@ -249,7 +211,6 @@ const CATS = [
   {id:'ges', name:'Gestión y administración', short:'Gestión', desc:'Personal de apoyo, rendiciones de subsidios, trámites, mantenimiento.',
    q:['Las rendiciones las hacen los investigadores, de noche.','Una persona de administración heroica.','Un equipo que conoce todos los formularios.','Nunca más se pierde un subsidio por un papel mal presentado.']}
 ];
-const EJES = ['Memoria, verdad y justicia','Géneros y sexualidades','Historia argentina y latinoamericana','Educación y desigualdades','Trabajo y mundos laborales','Literaturas y crítica cultural','Filosofía y teoría política','Lenguas, lenguajes y traducción','Ambiente y territorio','Migraciones y fronteras','Pueblos indígenas e interculturalidad','Humanidades digitales','Arte, estética y performance','Medios y comunicación','Religiones y creencias','Ciencia, tecnología y sociedad','Salud y sociedad','Juventudes','Estado y políticas públicas','Ciudades y vida urbana'];
 const EVENTS = {
   recorte:{kind:'cut', n:5, title:'Recorte presupuestario', text:'El presupuesto nacional de ciencia y técnica se ajusta. El instituto pierde 5 fichas. Tienen que decidir qué se achica.'},
   inflacion:{kind:'cut', n:3, title:'Los montos quedaron viejos', text:'La inflación se comió parte del presupuesto aprobado a principio de año. Pierden 3 fichas de poder adquisitivo.'},
@@ -280,15 +241,6 @@ const GLYPHS = {
 const STEPS = ['Identidad','Logo','Ejes','Presupuesto','Imprevisto','Acta'];
 const STOP = new Set(['de','del','la','las','los','el','y','e','en','para','sobre','a','al','por','con','o','u']);
 const SELLO = (()=>{const p=[];for(let i=0;i<32;i++){const a=i/32*Math.PI*2-Math.PI/2, r=i%2?41.5:46.5;p.push((50+r*Math.cos(a)).toFixed(1)+','+(50+r*Math.sin(a)).toFixed(1));}return p.join(' ');})();
-
-const SAMPLES = [
-  {v:1,ej:true,g:'Grupo de ejemplo',n:'Instituto de Estudios sobre Memoria y Territorio',s:'IEMT',m:'Recordar desde el lugar',r:'Huellas',j:'Jornadas Patagónicas de Memoria y Territorio',
-   l:{sh:'escudo',gl:'arbol',c:2,st:'relleno',si:true},e:['Memoria, verdad y justicia','Ambiente y territorio','Pueblos indígenas e interculturalidad'],
-   b:[5,2,3,1,1,3,1,3,1],ev:'recorte',ea:null,f:[4,1,2,0,1,3,1,3,0],er:'Sostuvimos becas y territorio. Cortamos viajes y gestión: las rendiciones las vamos a hacer nosotros.',rn:317},
-  {v:1,ej:true,g:'Grupo de ejemplo',n:'Centro de Humanidades Digitales del Litoral',s:'CHDL',m:'Leer con máquinas, pensar con personas',r:'Interfaz. Revista de Humanidades Digitales',j:'Encuentro Anual de Humanidades Digitales',
-   l:{sh:'hexagono',gl:'bombilla',c:6,st:'anillo',si:true},e:['Humanidades digitales','Lenguas, lenguajes y traducción','Medios y comunicación'],
-   b:[3,3,2,3,5,1,1,0,2],ev:'fundacion',ea:true,f:[3,3,2,5,7,1,1,0,2],er:'Aceptamos. La plata servía, pero discutimos mucho lo de publicar primero en inglés.',rn:852}
-];
 
 const $ = (s,r=document)=>r.querySelector(s);
 const esc = s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -334,46 +286,11 @@ function logoSVG(l, sigla){
 }
 const logoTile = (l,s)=>`<div class="logo-tile">${logoSVG(l,s)}</div>`;
 
-/* ---------- code encode / decode ---------- */
-function toB64(bytes){let s='';for(let i=0;i<bytes.length;i++)s+=String.fromCharCode(bytes[i]);return btoa(s).replace(/=+$/,'');}
-function fromB64(str){while(str.length%4)str+='=';const bin=atob(str);return Uint8Array.from(bin,c=>c.charCodeAt(0));}
-async function encode(obj){
-  const bytes = new TextEncoder().encode(JSON.stringify(obj));
-  if(window.CompressionStream){
-    try{
-      const buf = await new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer();
-      return 'IN1z:'+toB64(new Uint8Array(buf));
-    }catch(e){}
-  }
-  return 'IN1p:'+toB64(bytes);
-}
-async function decode(code){
-  const kind = code[3], raw = fromB64(code.slice(5));
-  let bytes = raw;
-  if(kind==='z'){
-    const buf = await new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer();
-    bytes = new Uint8Array(buf);
-  }
-  return normalize(JSON.parse(new TextDecoder().decode(bytes)));
-}
-function normalize(d){
-  if(!d||typeof d!=='object')throw new Error('bad');
-  const str=(x,n=200)=>typeof x==='string'?x.slice(0,n):'';
-  const arr=(x,n)=>Array.from({length:n},(_,i)=>Math.max(0,Math.min(20,Math.round(+((x||[])[i])||0))));
-  const l=d.l||{};
-  const out={v:1,g:str(d.g),n:str(d.n),s:str(d.s,8),m:str(d.m),r:str(d.r),j:str(d.j),
-    l:{sh:SHAPES[l.sh]?l.sh:'escudo',gl:GLYPHS[l.gl]?l.gl:'libro',c:Math.max(0,Math.min(7,+l.c||0)),st:['relleno','contorno','anillo'].includes(l.st)?l.st:'relleno',si:!!l.si},
-    e:Array.isArray(d.e)?d.e.slice(0,3).map(x=>str(x,80)):[], b:arr(d.b,9), ev:EVENTS[d.ev]?d.ev:null, ea:d.ea===true?true:d.ea===false?false:null,
-    f:arr(d.f||d.b,9), er:str(d.er,400), rn:+d.rn||0, ej:!!d.ej};
-  if(!out.n)throw new Error('sin nombre');
-  return out;
-}
-
 /* ---------- student state ---------- */
-const BLANK = ()=>({step:0,grupo:'',n:'',s:'',sAuto:true,lema:'',r:'',j:'',l:{sh:'escudo',gl:'libro',c:0,st:'relleno',si:true},e:[],custom:[],b:Array(9).fill(0),ev:null,ea:null,f:null,fBase:null,er:'',rn:100+Math.floor(Math.random()*900)});
+const BLANK = ()=>({step:0,grupo:'',n:'',s:'',sAuto:true,lema:'',r:'',dos:'',j:'',l:{sh:'escudo',gl:'libro',c:0,st:'relleno',si:true},e:['','',''],b:Array(9).fill(0),ev:null,ea:null,f:null,fBase:null,er:'',rn:100+Math.floor(Math.random()*900)});
 let S = Object.assign(BLANK(), store.get('fti-borrador')||{});
+S.e = [0,1,2].map(i=>(S.e&&S.e[i])||'');
 const save = ()=>store.set('fti-borrador',S);
-let mode = location.hash==='#docente'?'docente':'juego';
 let confirmReset = false;
 
 function siglaFrom(name){
@@ -386,7 +303,7 @@ function finalAlloc(){
   return (S.f||S.b).slice();
 }
 function toData(){
-  return {v:1,g:S.grupo.trim(),n:S.n.trim(),s:S.s.trim(),m:S.lema.trim(),r:S.r.trim(),j:S.j.trim(),l:S.l,e:S.e,b:S.b,ev:S.ev,ea:S.ea,f:finalAlloc(),er:S.er.trim(),rn:S.rn};
+  return {v:1,g:S.grupo.trim(),n:S.n.trim(),s:S.s.trim(),m:S.lema.trim(),r:S.r.trim(),dos:S.dos.trim(),j:S.j.trim(),l:S.l,e:S.e.map(x=>x.trim()).filter(Boolean),b:S.b,ev:S.ev,ea:S.ea,f:finalAlloc(),er:S.er.trim(),rn:S.rn};
 }
 
 function eventCfg(){
@@ -403,10 +320,10 @@ function eventCfg(){
 }
 function stepProblem(step){
   if(step===1){
-    const miss=[]; if(!S.n.trim())miss.push('nombre'); if(!S.r.trim())miss.push('revista'); if(!S.j.trim())miss.push('jornadas');
+    const miss=[]; if(!S.n.trim())miss.push('nombre'); if(!S.r.trim())miss.push('revista'); if(!S.dos.trim())miss.push('dossier'); if(!S.j.trim())miss.push('jornadas');
     return miss.length?'Falta completar: '+miss.join(', '):'';
   }
-  if(step===3){ const k=3-S.e.length; return k>0?`Elijan ${k} ${plural(k,'eje','ejes')} más`:''; }
+  if(step===3){ const k=S.e.filter(x=>!x.trim()).length; return k>0?`Falta escribir ${k} ${plural(k,'eje','ejes')}`:''; }
   if(step===4){ const left=TOTAL-sum(S.b); return left>0?`Quedan ${left} ${plural(left,'ficha','fichas')} por repartir`:''; }
   if(step===5){
     const ev=EVENTS[S.ev]; if(!ev) return 'Primero saquen una carta';
@@ -482,7 +399,6 @@ function refreshNav(){
 function go(step){ S.step=step; save(); render(); window.scrollTo(0,0); }
 
 function render(){
-  if(mode==='docente') return renderTeacher();
   const st=S.step;
   if(st===0) return renderIntro();
   if(st===6) return renderFinal();
@@ -499,19 +415,17 @@ function renderIntro(){
     <p class="eyebrow">Trabajo en grupo · unos 20 minutos</p>
     <h1>Fundá tu instituto de investigación</h1>
     <p class="lede">Su grupo va a crear un instituto de Humanidades y Ciencias Sociales. Le ponen nombre, arman una revista y unas jornadas, diseñan el logo, eligen qué investigar y reparten un presupuesto que no alcanza para todo.</p>
-    <div class="intro-art" aria-hidden="true">${logoTile(SAMPLES[0].l,'IEMT')}${logoTile(SAMPLES[1].l,'CHDL')}${logoTile({sh:'sello',gl:'mate',c:1,st:'relleno',si:false},'')}${logoTile({sh:'arco',gl:'columna',c:4,st:'relleno',si:true},'IIH')}</div>
+    <div class="intro-art" aria-hidden="true">${logoTile({sh:'escudo',gl:'arbol',c:2,st:'relleno',si:true},'IEMT')}${logoTile({sh:'hexagono',gl:'bombilla',c:6,st:'anillo',si:true},'CHDL')}${logoTile({sh:'sello',gl:'mate',c:1,st:'relleno',si:false},'')}${logoTile({sh:'arco',gl:'columna',c:4,st:'relleno',si:true},'IIH')}</div>
     <section class="sheet">
       <div class="field"><label for="grupo">Integrantes del grupo</label><input type="text" id="grupo" value="${esc(S.grupo)}" placeholder="Ana, Lucas, Ramiro, Sol" autocomplete="off"><span class="hint">Opcional. Aparece al pie del acta de fundación.</span></div>
       <div><p class="mono-label" style="margin-bottom:6px">Qué van a decidir</p>
-      <ol class="plan">${STEPS.map((s,i)=>`<li>${['Nombre, sigla, lema, revista y jornadas','Diseño del logo','Tres ejes de investigación','Cómo se reparten 20 fichas de presupuesto','Una carta con un imprevisto','Acta de fundación para mostrar al curso'][i]}</li>`).join('')}</ol></div>
+      <ol class="plan">${STEPS.map((s,i)=>`<li>${['Nombre, sigla, lema, revista con su primer dossier y jornadas','Diseño del logo','Tres ejes de investigación','Cómo se reparten 20 fichas de presupuesto','Una carta con un imprevisto','Acta de fundación en PDF, para subir a la carpeta del curso'][i]}</li>`).join('')}</ol></div>
       <div class="btns"><button class="btn primary" id="start">${started?'Seguir donde quedamos':'Empezar'}</button>${started?'<button class="btn ghost" id="fresh">Empezar de cero</button>':''}</div>
       <div id="freshConfirm"></div>
     </section>
-    <p class="small muted">¿Sos docente? <a href="#docente" id="toDoc">Ver y proyectar los institutos del curso</a></p>
   </main>`;
   $('#grupo').oninput=e=>{S.grupo=e.target.value; save();};
   $('#start').onclick=()=>go(Math.max(1,S.step));
-  $('#toDoc').onclick=e=>{e.preventDefault(); setMode('docente');};
   const f=$('#fresh'); if(f) f.onclick=()=>{
     $('#freshConfirm').innerHTML=`<div class="confirm"><span>Se borra todo lo que cargaron en este dispositivo.</span><button class="btn small primary" id="freshYes">Borrar y empezar</button><button class="btn small ghost" id="freshNo">Cancelar</button></div>`;
     $('#freshYes').onclick=()=>{S=BLANK(); save(); render();};
@@ -528,13 +442,14 @@ function stepIdentidad(){
     </div>
     <div class="field"><label for="lema">Lema <span class="muted" style="font-weight:400">(opcional)</span></label><input type="text" id="lema" maxlength="90" value="${esc(S.lema)}" placeholder="Pensar desde el sur" autocomplete="off"></div>
     <div class="field"><label for="r">Revista académica del instituto</label><input type="text" id="r" maxlength="110" value="${esc(S.r)}" placeholder="Cuadernos del Sur. Revista de Humanidades" autocomplete="off"></div>
+    <div class="field"><label for="dos">Tema del dossier del primer número</label><input type="text" id="dos" maxlength="140" value="${esc(S.dos)}" placeholder="Archivos, memorias y silencios" autocomplete="off"><span class="hint">El dossier reúne varios artículos sobre un mismo tema. Es la carta de presentación de la revista.</span></div>
     <div class="field"><label for="j">Jornadas anuales</label><input type="text" id="j" maxlength="130" value="${esc(S.j)}" placeholder="Jornadas de Jóvenes Investigadores en Humanidades" autocomplete="off"></div>
   </section>`;
 }
 function bindIdentidad(){
   $('#n').oninput=e=>{S.n=e.target.value; if(S.sAuto){S.s=siglaFrom(S.n); $('#s').value=S.s;} save(); refreshNav();};
   $('#s').oninput=e=>{S.s=e.target.value.toUpperCase(); e.target.value=S.s; S.sAuto=!S.s; save();};
-  ['lema','r','j'].forEach(k=>{$('#'+k).oninput=e=>{S[k]=e.target.value; save(); refreshNav();};});
+  ['lema','r','dos','j'].forEach(k=>{$('#'+k).oninput=e=>{S[k]=e.target.value; save(); refreshNav();};});
 }
 
 function stepLogo(){
@@ -569,31 +484,14 @@ function bindLogo(){
 }
 
 function stepEjes(){
-  const all=[...EJES,...S.custom];
-  const full=S.e.length>=3;
+  const ph=['Memoria y derechos humanos','Lenguas indígenas del NOA','Culturas juveniles y redes sociales'];
   return `<section class="sheet">
-    <div><h2>Ejes de investigación</h2><p class="muted">Elijan tres líneas que el instituto va a privilegiar. Lo que no elijan no desaparece, pero no va a tener prioridad en concursos, becas ni fondos.</p></div>
-    <div><span class="count-pill">${S.e.length} de 3 elegidos</span></div>
-    <div class="chips">${all.map(x=>{const on=S.e.includes(x);return `<button class="chip" data-eje="${esc(x)}" aria-pressed="${on}" ${!on&&full?'disabled':''}>${esc(x)}</button>`;}).join('')}</div>
-    <div class="field"><label for="otro">¿Falta alguno? Agréguenlo</label>
-      <div class="add-row"><input type="text" id="otro" maxlength="60" placeholder="Estudios sobre el deporte" autocomplete="off"><button class="btn" id="addEje">Agregar</button></div></div>
+    <div><h2>Ejes de investigación</h2><p class="muted">Escriban las tres líneas que el instituto va a privilegiar. Lo que no elijan no desaparece, pero no va a tener prioridad en concursos, becas ni fondos.</p></div>
+    ${[0,1,2].map(i=>`<div class="field"><label for="eje${i}">Eje ${i+1}</label><input type="text" id="eje${i}" data-eje="${i}" maxlength="90" value="${esc(S.e[i])}" placeholder="${esc(ph[i])}" autocomplete="off"></div>`).join('')}
   </section>`;
 }
 function bindEjes(){
-  $('.chips').addEventListener('click',e=>{
-    const b=e.target.closest('[data-eje]'); if(!b||b.disabled)return;
-    const x=b.dataset.eje;
-    S.e = S.e.includes(x)?S.e.filter(y=>y!==x):S.e.length<3?[...S.e,x]:S.e;
-    save(); render();
-  });
-  const add=()=>{
-    const v=$('#otro').value.trim(); if(!v)return;
-    if(![...EJES,...S.custom].includes(v)) S.custom.push(v);
-    if(S.e.length<3&&!S.e.includes(v)) S.e.push(v);
-    save(); render();
-  };
-  $('#addEje').onclick=add;
-  $('#otro').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();add();}};
+  document.querySelectorAll('[data-eje]').forEach(el=>el.oninput=e=>{ S.e[+el.dataset.eje]=e.target.value; save(); refreshNav(); });
 }
 
 function stepPresupuesto(){
@@ -653,7 +551,7 @@ function renderActa(d){
     <p class="visto">VISTO que la investigación en Humanidades y Ciencias Sociales es indispensable, y CONSIDERANDO que el presupuesto nunca alcanza para todo, EL CONSEJO DIRECTIVO RESUELVE:</p>
     <ol class="arts">
       <li><b>Art. 1.º</b>Créase el ${esc(d.n)}${d.s?` (${esc(d.s)})`:''}.</li>
-      <li><b>Art. 2.º</b>Su publicación periódica será la revista <i>${esc(d.r)}</i>.</li>
+      <li><b>Art. 2.º</b>Su publicación periódica será la revista <i>${esc(d.r)}</i>${d.dos?`, cuyo primer número incluirá el dossier «${esc(d.dos)}»`:''}.</li>
       <li><b>Art. 3.º</b>Realizará cada año las ${esc(d.j)}.</li>
       <li><b>Art. 4.º</b>Sus ejes prioritarios de investigación serán: ${d.e.map(esc).join('; ')||'a definir'}.</li>
       <li><b>Art. 5.º</b>El presupuesto se distribuye según el Anexo I.</li>
@@ -722,139 +620,19 @@ function renderFinal(){
   const d=toData();
   app.innerHTML=`<main class="wrap">${header()}
     ${renderActa(d)}
-    <div class="btns" style="align-items:center"><button class="btn" id="pdf">Descargar el acta en PDF</button><span class="note" id="pdfMsg" aria-live="polite"></span></div>
-    <section class="sheet share">
-      <div><h2>Mandale el instituto al docente</h2><p class="muted">Copien este código y envíenlo por el canal que les indicaron (WhatsApp, mail, el aula virtual).</p></div>
-      <textarea class="code" id="code" readonly aria-label="Código del instituto">Generando código…</textarea>
-      <div class="btns"><button class="btn primary" id="copy">Copiar código</button><a class="btn" id="wa" href="#" target="_blank" rel="noopener">Enviar por WhatsApp</a></div>
-      <p class="note" id="copyMsg" aria-live="polite"></p>
-    </section>
+    <section class="sheet"><div><h2>Último paso: el PDF</h2><p class="muted">Descarguen el acta y súbanla a la carpeta de Drive que les indicó el docente.</p></div>
+    <div class="btns" style="align-items:center"><button class="btn primary" id="pdf">Descargar el acta en PDF</button><span class="note" id="pdfMsg" aria-live="polite"></span></div></section>
     <div class="btns"><button class="btn ghost" id="edit">Volver a editar</button><button class="btn ghost" id="again">Fundar otro instituto</button></div>
     <div id="againConfirm"></div>
   </main>`;
-  encode(d).then(code=>{
-    $('#code').value=code;
-    $('#wa').href='https://wa.me/?text='+encodeURIComponent(`${d.n}${d.s?' ('+d.s+')':''}\n${code}`);
-  });
-  $('#copy').onclick=()=>{
-    const t=$('#code'), msg=$('#copyMsg');
-    const fallback=()=>{t.focus(); t.select(); msg.textContent='Código seleccionado: copienlo con Ctrl+C o manteniendo apretado.';};
-    try{ navigator.clipboard.writeText(t.value).then(()=>{msg.textContent='Copiado. Ahora péguenlo en el mensaje.';},fallback); }catch(e){ fallback(); }
-  };
   $('#pdf').onclick=()=>exportPDF([d], pdfName(d.s||d.n), $('#pdfMsg'));
   $('#edit').onclick=()=>go(1);
   $('#again').onclick=()=>{
-    $('#againConfirm').innerHTML=`<div class="confirm"><span>¿Ya mandaron el código? Esto borra este instituto del dispositivo.</span><button class="btn small primary" id="aYes">Sí, empezar otro</button><button class="btn small ghost" id="aNo">Cancelar</button></div>`;
+    $('#againConfirm').innerHTML=`<div class="confirm"><span>¿Ya descargaron el PDF? Esto borra este instituto del dispositivo.</span><button class="btn small primary" id="aYes">Sí, empezar otro</button><button class="btn small ghost" id="aNo">Cancelar</button></div>`;
     $('#aYes').onclick=()=>{S=BLANK(); save(); render(); window.scrollTo(0,0);};
     $('#aNo').onclick=()=>{$('#againConfirm').innerHTML='';};
   };
 }
-
-/* ---------- docente ---------- */
-let T = {list:store.get('fti-docente')||[], tab:'galeria', panel:null, msg:'', spot:-1, confirmClear:false, confirmDel:-1};
-const saveT=()=>store.set('fti-docente',T.list);
-const keyOf=d=>(d.n+'|'+d.s).toLowerCase();
-function setMode(m){ mode=m; try{ history.replaceState(null,'',m==='docente'?'#docente':'#juego'); }catch(e){} render(); window.scrollTo(0,0); }
-
-function renderTeacher(){
-  const L=T.list;
-  const panelOpen = T.panel===null ? L.length===0 : T.panel;
-  const hasEj = L.some(d=>d.ej);
-  let content='';
-  if(!L.length){
-    content=`<div class="empty"><h2>Todavía no hay institutos</h2><p class="muted">Pegá arriba los códigos que te mandan los grupos. Para probar cómo se ve, cargá dos institutos de ejemplo.</p><button class="btn" id="loadEj">Cargar ejemplos</button></div>`;
-  } else if(T.tab==='galeria'){
-    content=`<div class="gallery">${L.map((d,i)=>{
-      const tot=sum(d.f)||1;
-      return `<article class="icard">${d.ej?'<span class="tag-ej">Ejemplo</span>':''}
-        <button class="icard-open" data-open="${i}" aria-label="Presentar ${esc(d.n)}">
-        <div class="icard-top">${logoTile(d.l,d.s)}<div style="display:grid;gap:4px;min-width:0"><h2>${esc(d.n)}</h2>${d.s?`<span class="acta-sigla">${esc(d.s)}</span>`:''}</div></div>
-        ${d.m?`<p class="acta-lema">«${esc(d.m)}»</p>`:''}
-        <div class="meta"><div><span>Revista:</span> <i>${esc(d.r)}</i></div><div><span>Jornadas:</span> ${esc(d.j)}</div></div>
-        <div class="chips">${d.e.map(x=>`<span class="chip static">${esc(x)}</span>`).join('')}</div>
-        <div class="stack" aria-label="Distribución del presupuesto">${d.f.map((v,k)=>v?`<i style="--c:var(--c${k+1});width:${v/tot*100}%" title="${esc(CATS[k].name)}: ${v}"></i>`:'').join('')}</div>
-        ${EVENTS[d.ev]?`<p class="small muted">Imprevisto: ${esc(EVENTS[d.ev].title)}${EVENTS[d.ev].kind==='bonus'?(d.ea?' · aceptaron':' · rechazaron'):''}</p>`:''}
-        </button>
-        ${T.confirmDel===i?`<div class="confirm"><span>¿Quitar este instituto?</span><button class="btn small primary" data-delyes="${i}">Quitar</button><button class="btn small ghost" data-delno="1">Cancelar</button></div>`:`<button class="btn small ghost x" data-del="${i}">Quitar</button>`}
-      </article>`;}).join('')}</div>
-      <div class="legend">${CATS.map((c,i)=>`<span><span class="dot" style="--c:var(--c${i+1})"></span>${esc(c.short)}</span>`).join('')}</div>`;
-  } else {
-    const avg=CATS.map((_,k)=>sum(L.map(d=>d.f[k]))/L.length);
-    const cell=v=>`<td style="background:color-mix(in srgb,var(--accent) ${Math.min(100,Math.round(v*9))}%,transparent);color:${v>=5?'var(--accent-ink)':'var(--ink)'}">${Number.isInteger(v)?v:v.toFixed(1)}</td>`;
-    content=`<div class="heat-wrap"><table class="heat"><thead><tr><th></th>${CATS.map(c=>`<th>${esc(c.short)}</th>`).join('')}</tr></thead><tbody>
-      ${L.map(d=>`<tr><th class="rowh"><div class="in">${logoTile(d.l,d.s)}<span>${esc(d.s||d.n)}</span></div></th>${d.f.map(cell).join('')}</tr>`).join('')}
-      <tr class="avg"><th class="rowh">Promedio del curso</th>${avg.map(cell).join('')}</tr></tbody></table></div>
-      <p class="small muted">Fichas por área después del imprevisto. Cuanto más intenso el color, más presupuesto.</p>`;
-  }
-  app.innerHTML=`<main class="t-wrap">
-    <header class="t-head"><div style="display:grid;gap:6px"><p class="eyebrow">Fundá tu instituto · vista docente</p><h1>Institutos del curso${L.length?` <span class="muted" style="font-weight:500">(${L.length})</span>`:''}</h1></div>
-      <div class="tabs">
-        ${L.length?`<button class="btn" data-tab="galeria" aria-pressed="${T.tab==='galeria'}">Galería</button><button class="btn" data-tab="comparar" aria-pressed="${T.tab==='comparar'}">Comparar presupuestos</button><button class="btn primary" id="present">Presentar uno por uno</button><button class="btn ghost" id="pdfAll">Todas las actas en PDF</button>`:''}
-        <button class="btn ghost" id="togglePanel">${panelOpen?'Ocultar códigos':'Agregar códigos'}</button>
-      </div></header>
-    <p class="note" id="pdfAllMsg" aria-live="polite"></p>
-    ${panelOpen?`<section class="add-panel">
-      <div class="field"><label for="codes">Pegá los códigos de los grupos</label>
-      <textarea id="codes" placeholder="IN1z:..." spellcheck="false"></textarea>
-      <span class="hint">Podés pegar varios juntos, o directamente todo el chat de WhatsApp: se toman solo los códigos. Si un grupo manda una versión nueva, reemplaza a la anterior.</span></div>
-      <div class="btns"><button class="btn primary" id="addCodes">Agregar institutos</button>${hasEj?'<button class="btn ghost" id="dropEj">Quitar ejemplos</button>':''}${L.length?(T.confirmClear?'<button class="btn" id="clearYes">Sí, borrar todos</button><button class="btn ghost" id="clearNo">Cancelar</button>':'<button class="btn ghost" id="clear">Borrar todos</button>'):''}</div>
-      <p class="note" aria-live="polite">${esc(T.msg)}</p>
-      <p class="small muted">Los institutos quedan guardados solo en este navegador. Para que los grupos jueguen, compartí el mismo link de esta página sin el final <code>#docente</code>. <a href="#juego" id="toGame">Ir al juego</a></p>
-    </section>`:''}
-    ${content}
-  </main>${T.spot>=0&&L[T.spot]?spotHTML():''}`;
-  bindTeacher();
-}
-function spotHTML(){
-  const L=T.list, i=T.spot;
-  return `<div class="spot" role="dialog" aria-label="Presentación"><div class="spot-in">
-    <div class="spot-bar"><button class="btn ghost" id="sPrev" ${i===0?'disabled':''}>← Anterior</button><span class="mono-label">${i+1} de ${L.length}</span><button class="btn ghost" id="sNext" ${i===L.length-1?'disabled':''}>Siguiente →</button><button class="btn ghost" id="sPdf">PDF</button><button class="btn" id="sClose">Cerrar</button></div>
-    <p class="note" id="sPdfMsg" aria-live="polite"></p>
-    ${renderActa(L[i])}</div></div>`;
-}
-function bindTeacher(){
-  const on=(id,fn)=>{const el=$('#'+id); if(el) el.onclick=fn;};
-  on('togglePanel',()=>{ const open=T.panel===null?T.list.length===0:T.panel; T.panel=!open; T.msg=''; render(); });
-  on('loadEj',()=>{ SAMPLES.forEach(s=>upsert(normalize(s))); saveT(); T.panel=false; render(); });
-  on('dropEj',()=>{ T.list=T.list.filter(d=>!d.ej); saveT(); render(); });
-  on('clear',()=>{ T.confirmClear=true; render(); });
-  on('clearNo',()=>{ T.confirmClear=false; render(); });
-  on('clearYes',()=>{ T.list=[]; T.confirmClear=false; saveT(); T.msg='Se borraron todos los institutos.'; render(); });
-  on('toGame',e=>{ e.preventDefault(); setMode('juego'); });
-  on('present',()=>{ T.spot=0; render(); });
-  on('addCodes',async()=>{
-    const txt=$('#codes').value;
-    const codes=[...new Set(txt.match(/IN1[zp]:[A-Za-z0-9+\/]{16,}/g)||[])];
-    if(!codes.length){ T.msg='No se encontró ningún código. Cada código empieza con IN1z: o IN1p:'; render(); return; }
-    let ok=0, bad=0;
-    for(const c of codes){ try{ upsert(await decode(c)); ok++; }catch(e){ bad++; } }
-    saveT();
-    T.msg=`${ok} ${plural(ok,'instituto agregado','institutos agregados')}.`+(bad?` ${bad} ${plural(bad,'código no se pudo leer','códigos no se pudieron leer')}: pediles que lo copien de nuevo completo.`:'');
-    render();
-  });
-  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{T.tab=b.dataset.tab; render();});
-  document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{T.spot=+b.dataset.open; render();});
-  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{T.confirmDel=+b.dataset.del; render();});
-  document.querySelectorAll('[data-delno]').forEach(b=>b.onclick=()=>{T.confirmDel=-1; render();});
-  document.querySelectorAll('[data-delyes]').forEach(b=>b.onclick=()=>{T.list.splice(+b.dataset.delyes,1); T.confirmDel=-1; saveT(); render();});
-  on('sPrev',()=>{T.spot=Math.max(0,T.spot-1); render();});
-  on('sNext',()=>{T.spot=Math.min(T.list.length-1,T.spot+1); render();});
-  on('sClose',()=>{T.spot=-1; render();});
-  on('sPdf',()=>{ const d=T.list[T.spot]; exportPDF([d], pdfName(d.s||d.n), $('#sPdfMsg')); });
-  on('pdfAll',()=>exportPDF(T.list.slice(), 'Actas de fundación - institutos del curso.pdf', $('#pdfAllMsg')));
-  const sp=$('.spot'); if(sp) sp.scrollTop=0;
-}
-function upsert(d){
-  const k=keyOf(d), i=T.list.findIndex(x=>keyOf(x)===k);
-  if(i>=0) T.list[i]=d; else T.list.push(d);
-}
-document.addEventListener('keydown',e=>{
-  if(mode!=='docente'||T.spot<0)return;
-  if(e.key==='ArrowRight'&&T.spot<T.list.length-1){T.spot++; render();}
-  else if(e.key==='ArrowLeft'&&T.spot>0){T.spot--; render();}
-  else if(e.key==='Escape'){T.spot=-1; render();}
-});
-window.addEventListener('hashchange',()=>{ const m=location.hash==='#docente'?'docente':'juego'; if(m!==mode){mode=m; render();} });
 
 render();
 })();
