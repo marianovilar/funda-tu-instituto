@@ -161,6 +161,9 @@ input[type=text]:focus,textarea:focus{border-color:var(--accent)}
 .acta-title h2{font-size:clamp(1.5rem,4.5vw,2.2rem); font-weight:800; letter-spacing:-.01em; overflow-wrap:anywhere}
 .acta-sigla{font-family:var(--f-mono); font-weight:500; color:var(--accent); letter-spacing:.1em}
 .acta-lema{font-style:italic; color:var(--ink-2)}
+.room{margin:0; display:grid; gap:6px}
+.room img{display:block; width:100%; height:auto; image-rendering:pixelated; border:2px solid var(--ink); border-radius:4px; background:#C8D2DE}
+.room figcaption{font-size:.85rem; color:var(--ink-2)}
 .visto{font-family:var(--f-mono); font-size:.82rem; line-height:1.6; color:var(--ink-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding-block:12px}
 .arts{margin:0; padding:0; list-style:none; display:grid; gap:10px}
 .arts b{font-family:var(--f-mono); font-weight:500; font-size:.85rem; letter-spacing:.04em; text-transform:uppercase; margin-right:.4em}
@@ -537,8 +540,203 @@ function bindImprevisto(){
   const er=$('#er'); if(er) er.oninput=e=>{S.er=e.target.value; save();};
 }
 
+/* ---------- sala en pixel art ---------- */
+const FONT={A:'010101111101101',B:'110101110101110',C:'011100100100011',D:'110101101101110',E:'111100110100111',F:'111100110100100',G:'011100101101011',H:'101101111101101',I:'111010010010111',J:'001001001101010',K:'101101110101101',L:'100100100100111',M:'101111111101101',N:'110101101101101',O:'010101101101010',P:'110101110100100',Q:'010101101110011',R:'110101110101101',S:'011100010001110',T:'111010010010010',U:'101101101101111',V:'101101101101010',W:'101101111111101',X:'101101010101101',Y:'101101010010010',Z:'111001010100111',
+  '0':'111101101101111','1':'010110010010111','2':'110001010100111','3':'110001010001110','4':'101101111001001','5':'111100110001110','6':'011100111101111','7':'111001010010010','8':'111101111101111','9':'111101111001110'};
+const pixStr=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase();
+const pixW=s=>{let w=0;for(const ch of pixStr(s))w+=ch===' '?2:4;return Math.max(0,w-1);};
+function pixText(x,str,px,py,col){
+  x.fillStyle=col; let cx=px;
+  for(const ch of pixStr(str)){
+    if(ch===' '){cx+=2;continue;}
+    const g=FONT[ch]; if(g) for(let i=0;i<15;i++) if(g[i]==='1') x.fillRect(cx+i%3,py+Math.floor(i/3),1,1);
+    cx+=4;
+  }
+}
+function rng(seed){let a=seed>>>0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shapePath(sh){
+  const poly=pts=>new Path2D('M'+pts.trim().split(/\s+/).join('L')+'Z');
+  switch(sh){
+    case 'circulo':{const p=new Path2D();p.arc(50,50,46,0,Math.PI*2);return p;}
+    case 'hexagono': return poly('50,4 90,27 90,73 50,96 10,73 10,27');
+    case 'cuadrado':{const p=new Path2D();if(p.roundRect)p.roundRect(6,6,88,88,20);else p.rect(6,6,88,88);return p;}
+    case 'rombo': return poly('50,2 98,50 50,98 2,50');
+    case 'arco': return new Path2D('M11 96V47a39 39 0 0 1 78 0v49z');
+    case 'sello': return poly(SELLO);
+    default: return new Path2D('M50 4L90 15v32c0 24-17 40-40 49C27 87 10 71 10 47V15z');
+  }
+}
+function pixelLogo(l,size){
+  const c=document.createElement('canvas'); c.width=c.height=size;
+  const x=c.getContext('2d'), k=size/106;
+  const col=LCOLORS[l.c]||LCOLORS[0], filled=l.st!=='contorno', fg=filled?'#FFFFFF':col;
+  x.save(); x.scale(k,k); x.translate(3,3);
+  const sp=shapePath(l.sh);
+  if(filled){x.fillStyle=col;x.fill(sp);} else {x.strokeStyle=col;x.lineWidth=10;x.lineJoin='round';x.stroke(sp);}
+  const g=GLYPHS[l.gl]||GLYPHS.libro, s=2.05, cy=l.sh==='escudo'?47:50;
+  x.translate(50-12*s,cy-12*s); x.scale(s,s);
+  x.strokeStyle=fg; x.lineWidth=2.8; x.lineCap='round'; x.lineJoin='round'; x.stroke(new Path2D(g.d));
+  x.restore();
+  const hex=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)), A=hex(col), B=hex(fg);
+  const im=x.getImageData(0,0,size,size), d=im.data;
+  for(let i=0;i<d.length;i+=4){
+    if(d[i+3]<110){d[i+3]=0;continue;}
+    const da=(d[i]-A[0])**2+(d[i+1]-A[1])**2+(d[i+2]-A[2])**2, db=(d[i]-B[0])**2+(d[i+1]-B[1])**2+(d[i+2]-B[2])**2;
+    const C=db<da?B:A; d[i]=C[0]; d[i+1]=C[1]; d[i+2]=C[2]; d[i+3]=255;
+  }
+  x.putImageData(im,0,0);
+  return c;
+}
+const roomCache=new Map();
+function roomImage(d){
+  const key=JSON.stringify([d.f,d.l,d.s,d.n,d.rn]);
+  if(roomCache.has(key)) return roomCache.get(key);
+  const W=192,H=112,c=document.createElement('canvas'); c.width=W; c.height=H;
+  const x=c.getContext('2d');
+  const R=(a,b,w,h,col)=>{x.fillStyle=col;x.fillRect(a,b,w,h);};
+  let seed=(d.rn||1)*7919; for(const ch of (d.n||'')) seed=(Math.imul(seed,31)+ch.charCodeAt(0))>>>0;
+  const rnd=rng(seed), ri=(a,b)=>a+Math.floor(rnd()*(b-a+1)), pick=a=>a[Math.floor(rnd()*a.length)];
+  const V=id=>(d.f||[])[CATS.findIndex(q=>q.id===id)]||0, T=id=>tier(V(id));
+  const OUT='#2A2E3B', WOOD='#7A5230', WOOD2='#8E6238', WOOD3='#5E3E24';
+  const SK=['#F2C9A0','#D9A57A','#B97F55','#8D5A3B','#F5D7B8'], HR=['#2A1E17','#5A3A22','#8B5A2B','#1C1C1C','#C9A15A','#7A2E2E'];
+  const SH=['#3F5BB0','#C0392B','#1E8C6E','#D98E04','#7B3FA0','#0E7490','#B4506A','#4E8F3A','#E07A3F'];
+  const BOOK=['#8E3B46','#2F5D8C','#3E7C4F','#C28B2C','#6B4C9A','#A0522D','#2E6F75','#B04A5A','#D8C9A8'];
+  const logoCol=LCOLORS[(d.l||{}).c]||LCOLORS[0];
+  const seated=(px,py)=>{const h=pick(HR),s=pick(SK);R(px+1,py,5,2,h);R(px,py+1,1,2,h);R(px+1,py+2,5,3,s);R(px+2,py+3,1,1,OUT);R(px+4,py+3,1,1,OUT);R(px,py+5,7,5,pick(SH));};
+  const standing=(px,py,mate)=>{const h=pick(HR),s=pick(SK),sh=pick(SH);R(px+1,py,5,2,h);R(px+1,py+2,5,3,s);R(px+2,py+3,1,1,OUT);R(px+4,py+3,1,1,OUT);R(px,py+5,7,7,sh);R(px+1,py+12,2,5,'#39405A');R(px+4,py+12,2,5,'#39405A');R(px-1,py+6,1,4,s);R(px+7,py+6,1,4,s);if(mate){R(px+7,py+8,3,3,'#8B5A2B');R(px+8,py+6,1,2,'#C9CDD6');}};
+
+  // pared y piso
+  R(0,0,W,64,'#C8D2DE');
+  for(let xx=6;xx<W;xx+=12) R(xx,0,1,52,'#C1CCD9');
+  R(0,52,W,12,'#A7B5C7'); R(0,52,W,1,'#8D9DB2'); R(0,63,W,1,'#6E7F95');
+  R(0,64,W,48,'#B98A5A');
+  for(let yy=64,k=0;yy<H;yy+=6,k++){R(0,yy,W,1,'#A67A4D'); for(let xx=(k%2)*14;xx<W;xx+=28) R(xx,yy,1,6,'#A67A4D');}
+
+  // jornadas: banderines
+  const te=T('eve');
+  if(te>=1){
+    const x0=te===1?50:0, x1=te===1?142:W, cols=['#E0413A','#F2B632','#3F8FD0','#4FAF6A'];
+    R(x0,2,x1-x0,1,OUT);
+    const ws=[6,6,4,4,2], os=[0,0,1,1,2];
+    for(let xx=x0+1,k=0;xx+6<=x1;xx+=8,k++) for(let r=0;r<5;r++) R(xx+os[r],3+r,ws[r],1,cols[k%4]);
+  }
+
+  // biblioteca y archivo
+  const vb=V('bib');
+  R(3,12,38,52,'#5E3E24'); R(5,14,34,48,'#3B2716');
+  for(let k=0;k<5;k++) R(4,23+k*10,36,1,'#6E4A2C');
+  const levels=vb===0?0:Math.min(5,vb);
+  for(let k=4;k>4-levels;k--){
+    const base=23+k*10; let xx=5;
+    while(xx<38){const w=ri(2,3),h=ri(5,8);R(xx,base-h,Math.min(w,39-xx),h,pick(BOOK));xx+=w+(rnd()<.12?2:0);}
+  }
+  if(vb===0){
+    R(9,56,2,7,'#8E3B46'); R(12,57,2,6,'#2F5D8C');
+    [[5,14],[6,14],[7,14],[8,14],[9,14],[5,15],[5,16],[5,17],[5,18],[6,15],[7,16],[8,17]].forEach(([a,b])=>R(a,b,1,1,'#DDE3EA'));
+  }
+  if(vb>=6){
+    const n=Math.min(8,(vb-5)*2);
+    for(let i=0;i<n;i++){const bx=4+(i%4)*9, by=i<4?66:60; R(bx,by,8,6,'#C8A06A'); R(bx,by,8,1,'#A8804A'); R(bx+2,by+2,4,2,'#F4F1E8');}
+  }
+
+  // divulgación al público: cartel AL AIRE
+  const td=T('dpg');
+  if(td>=2){ R(6,3,32,9,OUT); R(7,4,30,7,'#E0413A'); pixText(x,'AL AIRE',7+Math.floor((30-pixW('AL AIRE'))/2),5,'#FFFFFF'); }
+
+  // redes internacionales: mapa
+  const tm=T('red');
+  const land=[[50,16,6,5],[52,21,3,6],[60,15,5,4],[61,19,4,7],[67,15,6,6],[70,26,3,2]];
+  if(tm===1){ R(52,18,18,13,OUT); R(53,19,16,11,'#7FB8E0'); R(55,21,4,3,'#6FAE5E'); R(56,24,2,4,'#6FAE5E'); R(61,21,5,5,'#6FAE5E'); R(65,27,2,1,'#6FAE5E'); }
+  if(tm>=2){
+    R(46,12,30,23,OUT); R(47,13,28,21,'#7FB8E0');
+    land.forEach(([a,b,w,h])=>R(a,b,w,h,'#6FAE5E'));
+    const pins=Math.min(12,V('red'));
+    for(let i=0;i<pins;i++){const [a,b,w,h]=pick(land);const px=a+ri(0,w-1),py=b+ri(0,h-1);R(px,py,1,1,'#E0413A');R(px,py-1,1,1,'#FFFFFF');}
+  }
+
+  // placa con el logo
+  const hasS=!!(d.s&&d.s.trim());
+  R(78,9,36,hasS?42:36,'#6B4A2B'); R(80,11,32,hasS?38:32,'#F4F1E8');
+  x.drawImage(pixelLogo(d.l||{},30),81,12);
+  if(hasS){ const t=d.s.trim().slice(0,8); pixText(x,t,96-Math.ceil(pixW(t)/2),43,OUT); }
+
+  // divulgación académica: exhibidor de revistas
+  const vp=V('pub');
+  R(118,12,28,24,'#6B4A2B'); R(119,13,26,22,'#8A6440'); R(119,23,26,1,'#5A3C22'); R(119,34,26,1,'#5A3C22');
+  for(let i=0;i<Math.min(6,vp);i++){const cx=121+(i%3)*8, cy=14+Math.floor(i/3)*11; R(cx,cy,7,9,logoCol); R(cx+1,cy+1,5,2,'#FFFFFF'); R(cx+1,cy+5,5,1,'#FFFFFF'); R(cx+1,cy+7,3,1,'#FFFFFF');}
+  if(vp>=6){ R(142,13,3,3,'#F2B632'); R(143,14,1,1,'#FFFFFF'); }
+
+  // territorio: puerta
+  const tr=T('ter');
+  R(158,24,22,40,OUT);
+  if(tr>=2){ R(160,26,18,38,'#9ED0F0'); R(160,50,18,14,'#6DB36B'); R(167,38,2,14,'#6B4A2B'); R(163,31,10,9,'#3E8E4A'); R(165,29,6,3,'#3E8E4A'); R(160,26,3,38,'#8A5A34'); }
+  else if(tr===1){ R(160,26,18,38,'#8A5A34'); R(172,26,6,38,'#9ED0F0'); R(172,50,6,14,'#6DB36B'); R(171,26,1,38,OUT); }
+  else { R(160,26,18,38,'#8A5A34'); R(162,28,6,14,'#7A4E2C'); R(170,28,6,14,'#7A4E2C'); R(162,45,6,16,'#7A4E2C'); R(170,45,6,16,'#7A4E2C'); R(174,44,2,2,'#E0C060'); }
+
+  // tecnología: rack de servidores
+  const tt=T('tec');
+  if(tt>=3){ R(118,38,11,32,OUT); R(119,39,9,30,'#3A3F4D'); for(let yy=41;yy<67;yy+=4){R(120,yy,7,2,'#2A2E3B');R(121,yy,1,1,pick(['#4FE07A','#4FE07A','#F2B632']));R(123,yy,1,1,pick(['#4FE07A','#3F8FD0']));} }
+
+  // gestión: archiveros
+  const tg=T('ges');
+  const cabinet=cx=>{R(cx,44,11,26,'#8C96A6');R(cx,44,11,1,'#6E788A');R(cx,52,11,1,'#6E788A');R(cx,61,11,1,'#6E788A');[47,55,64].forEach(yy=>R(cx+4,yy,3,1,'#E6E9EF'));};
+  if(tg>=2) cabinet(131);
+  if(tg>=3) cabinet(144);
+
+  // territorio: plantas y vecinos
+  const plants=Math.min(3,V('ter')), spots=[150,184,143];
+  for(let i=0;i<plants;i++){const px=spots[i];R(px,67,5,5,'#C0643A');R(px,67,5,1,'#A0522D');R(px-1,62,7,5,'#3E8E4A');R(px+1,60,3,2,'#4FAF5A');}
+  if(tr>=3){ standing(162,54,true); standing(171,56,false); }
+
+  // becarios y computadoras
+  const nb=V('bec'), nSeat=Math.min(8,nb), desks=Math.max(2,nSeat);
+  const slots=[[48,76],[59,95],[70,76],[81,95],[92,76],[103,95],[114,76],[125,95]];
+  const used=slots.slice(0,desks).map((s,i)=>({x:s[0],y:s[1],p:i<nSeat,i}));
+  const pc=(dx,dy,i)=>{
+    if(tt===0&&i!==0) return; if(tt===1&&i%2) return;
+    if(tt<=1){R(dx+10,dy-7,7,7,'#D8CFB8');R(dx+11,dy-6,5,4,'#3B6E4A');R(dx+12,dy-5,1,1,'#7FD08F');}
+    else {R(dx+10,dy-7,7,5,OUT);R(dx+11,dy-6,5,3,tt>=3?'#8FD3FF':'#6FB7E8');R(dx+13,dy-2,1,2,OUT);}
+  };
+  const desk=s=>{
+    if(s.p) seated(s.x+3,s.y-9); else { R(s.x+4,s.y-6,7,6,'#4A5068'); R(s.x+4,s.y-6,7,1,'#39405A'); }
+    pc(s.x,s.y,s.i);
+    R(s.x,s.y,18,2,WOOD); R(s.x,s.y+2,18,6,WOOD2); R(s.x+1,s.y+8,2,3,WOOD3); R(s.x+15,s.y+8,2,3,WOOD3);
+    if(tg===0&&rnd()<.6){R(s.x+2,s.y-1,4,1,'#FFFFFF');R(s.x+3,s.y-2,4,1,'#F4F4F0');}
+  };
+  used.filter(s=>s.y===76).forEach(desk);
+  if(nb>8){ standing(142,70,false); if(nb>9) standing(38,74,false); }
+  used.filter(s=>s.y===95).forEach(desk);
+
+  // divulgación al público: mesa de podcast y público
+  if(td>=1){
+    if(td>=2) seated(9,90);
+    R(6,99,26,2,WOOD); R(6,101,26,5,WOOD2); R(7,106,2,3,WOOD3); R(29,106,2,3,WOOD3);
+    R(20,92,1,7,OUT); R(19,89,3,4,'#5A5F6E'); R(19,89,3,1,'#8A90A0'); R(22,98,6,1,OUT);
+  }
+  if(td>=3){ standing(34,86,false); standing(41,88,false); }
+
+  // jornadas: mesa de café
+  if(te>=1&&te<3){ R(170,100,14,2,WOOD); R(170,102,14,3,WOOD2); R(171,105,2,3,WOOD3); R(181,105,2,3,WOOD3); R(176,93,3,7,'#C0392B'); R(176,93,3,1,'#E6E9EF'); }
+  if(te>=3){
+    R(150,100,36,2,'#F1ECE0'); R(150,102,36,4,'#DCD4C2'); R(152,106,2,3,WOOD3); R(182,106,2,3,WOOD3);
+    [153,158,163].forEach(cx=>{R(cx,97,3,3,'#FFFFFF');R(cx+3,98,1,1,'#FFFFFF');R(cx,97,3,1,'#6B4A2B');});
+    [168,173,178].forEach(cx=>{R(cx,98,4,2,'#D99A3E');R(cx+1,97,2,1,'#E8B060');});
+    R(183,92,3,8,'#C0392B'); R(183,92,3,1,'#E6E9EF');
+  }
+
+  // gestión escasa: papeles en el piso
+  const piles=tg===0?7:tg===1?3:0;
+  for(let i=0;i<piles;i++){const px=ri(46,140),py=ri(104,108);R(px,py,6,3,'#F4F4F0');R(px,py+1,6,1,'#C8CCD4');R(px+1,py-1,5,1,'#FFFFFF');}
+
+  const big=document.createElement('canvas'); big.width=W*4; big.height=H*4;
+  const bx=big.getContext('2d'); bx.imageSmoothingEnabled=false; bx.drawImage(c,0,0,W*4,H*4);
+  const url=big.toDataURL('image/png');
+  roomCache.set(key,url);
+  return url;
+}
+
 /* ---------- acta ---------- */
-function renderActa(d){
+function renderActa(d, part){
   const ev=EVENTS[d.ev];
   const f=d.f, b=d.b, tot=sum(f)||1;
   const bars=CATS.map((c,i)=>{
@@ -547,9 +745,10 @@ function renderActa(d){
   }).join('');
   const evTxt = ev?`<div class="imp"><h3>Imprevisto · ${esc(ev.title)}</h3>${ev.kind==='bonus'?`<p><b>${d.ea?'Aceptaron la oferta.':'Rechazaron la oferta.'}</b></p>`:''}${d.er?`<p>«${esc(d.er)}»</p>`:''}</div>`:'';
   const yr = new Date().getFullYear();
-  return `<article class="acta">
-    <p class="mono-label">Resolución N.º ${String(d.rn||0).padStart(4,'0')}/${yr}</p>
+  const res = `<p class="mono-label">Resolución N.º ${String(d.rn||0).padStart(4,'0')}/${yr}</p>`;
+  const A = `${res}
     <div class="acta-head">${logoTile(d.l,d.s)}<div class="acta-title"><h2>${esc(d.n)}</h2>${d.s?`<span class="acta-sigla">${esc(d.s)}</span>`:''}${d.m?`<span class="acta-lema">«${esc(d.m)}»</span>`:''}</div></div>
+    <figure class="room"><img src="${roomImage(d)}" width="768" height="448" alt="Sala central del instituto en pixel art"><figcaption>Sala central del instituto. Lo que hay en ella depende de cómo repartieron el presupuesto.</figcaption></figure>
     <p class="visto">VISTO que la investigación en Humanidades y Ciencias Sociales es indispensable, y CONSIDERANDO que el presupuesto nunca alcanza para todo, EL CONSEJO DIRECTIVO RESUELVE:</p>
     <ol class="arts">
       <li><b>Art. 1.º</b>Créase el ${esc(d.n)}${d.s?` (${esc(d.s)})`:''}.</li>
@@ -557,12 +756,15 @@ function renderActa(d){
       <li><b>Art. 3.º</b>Realizará cada año las ${esc(d.j)}.</li>
       <li><b>Art. 4.º</b>Sus ejes prioritarios de investigación serán: ${d.e.map(esc).join('; ')||'a definir'}.</li>
       <li><b>Art. 5.º</b>El presupuesto se distribuye según el Anexo I.</li>
-    </ol>
+    </ol>`;
+  const B = `
     <section class="anexo"><h3>Anexo I · Distribución del presupuesto (${sum(f)} fichas)</h3>${bars}</section>
     ${evTxt}
     ${d.g?`<p class="firmas">Firman: ${esc(d.g)}</p>`:''}
-    <div class="stamp">APROBADO<small>Consejo Directivo</small></div>
-  </article>`;
+    <div class="stamp">APROBADO<small>Consejo Directivo</small></div>`;
+  if(part==='a') return `<article class="acta">${A}</article>`;
+  if(part==='b') return `<article class="acta">${res.replace('</p>',` · ${esc(d.s||d.n)} · Anexo</p>`)}${B}</article>`;
+  return `<article class="acta">${A}${B}</article>`;
 }
 
 /* ---------- PDF ---------- */
@@ -592,9 +794,9 @@ async function exportPDF(list, filename, msgEl){
     document.body.appendChild(host);
     const pdf=new window.jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
     const PW=210, PH=297, M=10;
-    for(let i=0;i<list.length;i++){
-      if(list.length>1) say(`Preparando el PDF… (${i+1} de ${list.length})`);
-      host.innerHTML=renderActa(list[i]);
+    const pages=[]; list.forEach(d=>{pages.push([d,'a']); pages.push([d,'b']);});
+    for(let i=0;i<pages.length;i++){
+      host.innerHTML=renderActa(pages[i][0],pages[i][1]);
       const canvas=await window.html2canvas(host.firstElementChild,{scale:2,backgroundColor:'#FFFFFF',logging:false});
       let w=PW-2*M, h=canvas.height*w/canvas.width;
       if(h>PH-2*M){ h=PH-2*M; w=canvas.width*h/canvas.height; }
